@@ -114,6 +114,12 @@
                                 <textarea id="pStartup" name="startup" class="form-control" rows="8">{{ $egg->startup }}</textarea>
                                 <p class="text-muted small">The default startup command that should be used for new servers using this Egg.</p>
                             </div>
+                            <div class="col-xs-12">
+                            	<div class="form-group">
+                            		<label for="pThumbnail" class="control-label">Thumbnail URL</label>
+                            		<input type="text" id="pThumbnail" name="thumbnail" class="form-control" value="{{ $egg->thumbnail }}" placeholder="https://mydomain.tld/server.png">
+                            	</div>
+                            </div>
                         </div>
                     </div>
                 </div>

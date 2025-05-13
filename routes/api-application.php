@@ -102,6 +102,14 @@ Route::group(['prefix' => '/servers'], function () {
 
         Route::delete('/{database:id}', [Application\Servers\DatabaseController::class, 'delete']);
     });
+    // Egg Changer Endpoint
+    Route::group(['prefix' => '/{server}/eggchanger'], function () {
+        Route::get('/', [Application\Servers\EggChangerController::class, 'index'])->name('api.application.servers.eggchanger');
+
+    	Route::post('/add', [Application\Servers\EggChangerController::class, 'add'])->name('api.application.servers.eggchanger.add');
+
+        Route::delete('/remove', [Application\Servers\EggChangerController::class, 'remove'])->name('api.application.servers.eggchanger.remove');
+    });
 });
 
 /*

@@ -137,10 +137,18 @@ class ServerViewController extends Controller
             'nodeData' => $this->nodeRepository->getNodesForServerCreation(),
         ]);
 
+        $available_eggs = \Illuminate\Support\Facades\DB::table('available_eggs')->get();
+
+        foreach ($available_eggs as $key => $available_egg) {
+        	$egg = \Illuminate\Support\Facades\DB::table('eggs')->where('id', '=', $available_egg->egg_id)->get();
+        	$available_eggs[$key]->egg = $egg[0];
+        }
+
         return $this->view->make('admin.servers.view.manage', [
             'server' => $server,
             'locations' => $this->locationRepository->all(),
             'canTransfer' => $canTransfer,
+            'available_eggs' => $available_eggs,
         ]);
     }
 

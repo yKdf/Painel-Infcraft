@@ -105,6 +105,13 @@ class Permission extends Model
                 'connect' => 'Allows a user to connect to the websocket instance for a server to stream the console.',
             ],
         ],
+        'eggchanger' => [
+	        'description' => 'Manage egg changer.',
+	        'keys' => [
+	        	'manage' => 'Change server egg.',
+            ],
+        ],
+
 
         'control' => [
             'description' => 'Permissions that control a user\'s ability to control the power state of a server, or send commands.',

@@ -35,7 +35,10 @@ class EggDeletionService
         if ($children > 0) {
             throw new HasChildrenException(trans('exceptions.nest.egg.has_children'));
         }
-
+        
+        \Illuminate\Support\Facades\DB::table('available_eggs')->where('egg_id', '=', $egg)->delete();
+        \Illuminate\Support\Facades\DB::table('default_eggs')->where('egg_id', '=', $egg)->delete();
+      
         return $this->repository->delete($egg);
     }
 }

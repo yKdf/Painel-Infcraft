@@ -97,6 +97,7 @@ class Egg extends Model
         'script_entry',
         'script_container',
         'copy_script_from',
+        'thumbnail',
     ];
 
     /**
@@ -130,6 +131,7 @@ class Egg extends Model
         'config_startup' => 'required_without:config_from|nullable|json',
         'config_logs' => 'required_without:config_from|nullable|json',
         'config_files' => 'required_without:config_from|nullable|json',
+        'thumbnail' => 'nullable|string',
         'update_url' => 'sometimes|nullable|string',
         'force_outgoing_ip' => 'sometimes|boolean',
     ];

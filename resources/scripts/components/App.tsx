@@ -10,6 +10,7 @@ import tw from 'twin.macro';
 import GlobalStylesheet from '@/assets/css/GlobalStylesheet';
 import { history } from '@/components/history';
 import { setupInterceptors } from '@/api/interceptors';
+import EggsRouter from '@/routers/EggsRouter';
 import AuthenticatedRoute from '@/components/elements/AuthenticatedRoute';
 import { ServerContext } from '@/state/server';
 import '@/assets/tailwind.css';
@@ -77,6 +78,7 @@ const App = () => {
                                 </Spinner.Suspense>
                             </AuthenticatedRoute>
                             <AuthenticatedRoute path={'/'}>
+                                <Route path='/eggs' component={EggsRouter} />
                                 <Spinner.Suspense>
                                     <DashboardRouter />
                                 </Spinner.Suspense>

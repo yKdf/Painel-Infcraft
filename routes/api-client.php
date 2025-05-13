@@ -18,6 +18,7 @@ use Pterodactyl\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
 */
 Route::get('/', [Client\ClientController::class, 'index'])->name('api:client.index');
 Route::get('/permissions', [Client\ClientController::class, 'permissions']);
+Route::get('/eggs', [Client\AvailableEggsController::class, 'index']);
 
 Route::prefix('/account')->middleware(AccountSubject::class)->group(function () {
     Route::prefix('/')->withoutMiddleware(RequireTwoFactorAuthentication::class)->group(function () {
@@ -139,6 +140,8 @@ Route::group([
         Route::post('/reinstall', [Client\Servers\SettingsController::class, 'reinstall']);
         Route::put('/docker-image', [Client\Servers\SettingsController::class, 'dockerImage']);
     });
+    Route::group(['prefix' => '/eggs'], function () {
+        Route::get('/', [Client\Servers\EggChangerController::class, 'index']);
+        Route::post('/change', [Client\Servers\EggChangerController::class, 'change']);
+    });
 });
-
-

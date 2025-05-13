@@ -53,7 +53,29 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-sm-4">
+		    <div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">Selectable Eggs</h3>
+				</div>
+				<form action="{{ route('admin.eggchanger.server.availables', $server->id) }}" method="POST">
+					<div class="box-body">
+						<div class="form-group">
+							<label for="selectableEggs">Selectable Eggs</label>
+							<select class="form-control" multiple id="selectableEggs" name="selectableEggs[]">
+								@foreach ($available_eggs as $available_egg)
+									<option value="{{ $available_egg->id }}" {{ in_array($available_egg->egg_id, unserialize($server->available_eggs)) ? 'selected' : '' }}>{{ $available_egg->egg->name }}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
+					<div class="box-footer">
+						{!! csrf_field() !!}
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
         @if(! $server->isSuspended())
             <div class="col-sm-4">
                 <div class="box box-warning">
@@ -195,7 +217,11 @@
 @section('footer-scripts')
     @parent
     {!! Theme::js('vendor/lodash/lodash.js') !!}
-
+    <script>
+	    $('#selectableEggs').select2({
+	    	placeholder: 'Select Eggs'
+    	});
+    </script>
     @if($canTransfer)
         {!! Theme::js('js/admin/server/transfer.js') !!}
     @endif

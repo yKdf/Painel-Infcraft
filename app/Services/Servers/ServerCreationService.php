@@ -103,6 +103,14 @@ class ServerCreationService
             throw $exception;
         }
 
+        $available_eggs = \Illuminate\Support\Facades\DB::table('default_eggs')->get();
+        $default_eggs = [];
+        foreach ($available_eggs as $available_egg) {
+        	array_push($default_eggs, $available_egg->egg_id);
+        }
+        \Illuminate\Support\Facades\DB::table('servers')->where('id', '=', $server->id)->update(['available_eggs' => serialize($default_eggs)]);
+
+
         return $server;
     }
 

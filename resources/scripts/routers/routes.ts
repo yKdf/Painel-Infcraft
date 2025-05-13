@@ -14,6 +14,7 @@ import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer'
 import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
 import PluginManagerContainer from '@/components/server/plugin/PluginManagerContainer';
+import EggsContainer from '@/components/server/eggs/EggsContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -139,6 +140,12 @@ export default {
             permission: 'startup.*',
             name: 'Startup',
             component: StartupContainer,
+        },
+        {
+            path: '/eggs',
+            permission: ['eggchanger.*'],
+            name: 'Egg Changer',
+            component: EggsContainer,
         },
         {
             path: '/settings',

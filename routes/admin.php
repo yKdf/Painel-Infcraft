@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Pterodactyl\Http\Controllers\Admin;
 use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
+use Pterodactyl\Http\Controllers\Admin\EggChangerController;
 
 Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
 
@@ -226,3 +227,21 @@ Route::group(['prefix' => 'nests'], function () {
     Route::delete('/egg/{egg:id}', [Admin\Nests\EggController::class, 'destroy']);
     Route::delete('/egg/{egg:id}/variables/{variable:id}', [Admin\Nests\EggVariableController::class, 'destroy']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Egg Changer Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/eggchanger
+|
+*/
+Route::group(['prefix' => 'eggchanger'], function () {
+    Route::get('/', [EggChangerController::class, 'index'])->name('admin.eggchanger');
+
+    Route::post('/availables', [EggChangerController::class, 'availables'])->name('admin.eggchanger.availables');
+    Route::post('/defaults', [EggChangerController::class, 'defaults'])->name('admin.eggchanger.defaults');
+	
+	Route::post('/{server_id}/availables', [EggChangerController::class, 'serverAvailables'])->name('admin.eggchanger.server.availables');
+});
+
