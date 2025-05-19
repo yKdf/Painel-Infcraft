@@ -8,16 +8,6 @@ import AvailableEggsContainer from '@/components/AvailableEggsContainer';
 
 export default ({ location }: RouteComponentProps) => (
     <>
-        <NavigationBar />
-        {location.pathname.startsWith('/eggs') && (
-            <SubNavigation>
-                <div>
-                    <NavLink to={'/eggs'} exact>
-                        Eggs
-                    </NavLink>
-                </div>
-            </SubNavigation>
-        )}
         <TransitionRouter>
             <Switch location={location}>
                 <Route path={'/eggs'} exact>

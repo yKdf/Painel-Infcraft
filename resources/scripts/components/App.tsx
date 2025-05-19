@@ -78,7 +78,6 @@ const App = () => {
                                 </Spinner.Suspense>
                             </AuthenticatedRoute>
                             <AuthenticatedRoute path={'/'}>
-                                <Route path='/eggs' component={EggsRouter} />
                                 <Spinner.Suspense>
                                     <DashboardRouter />
                                 </Spinner.Suspense>
