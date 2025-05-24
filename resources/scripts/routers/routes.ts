@@ -142,16 +142,16 @@ export default {
             component: StartupContainer,
         },
         {
-            path: '/eggs',
-            permission: ['eggchanger.*'],
-            name: 'Egg Changer',
-            component: EggsContainer,
-        },
-        {
             path: '/settings',
             permission: ['settings.*', 'file.sftp'],
             name: 'Settings',
             component: SettingsContainer,
+        },
+        {
+            path: '/eggs',
+            permission: ['eggchanger.*'],
+            name: 'Egg Changer',
+            component: EggsContainer,
         },
         {
             path: '/activity',
