@@ -63,6 +63,9 @@ const ServerDetailsBlock = ({ className }: { className?: string }) => {
     const allocation = ServerContext.useStoreState((state) => {
         const match = state.server.data!.allocations.find((allocation) => allocation.isDefault);
 
+        if (match?.port === 25565) {
+            return !match ? 'n/a' : `${match.alias || ip(match.ip)}`;
+        }
         return !match ? 'n/a' : `${match.alias || ip(match.ip)}:${match.port}`;
     });
 
@@ -111,11 +114,12 @@ const ServerDetailsBlock = ({ className }: { className?: string }) => {
                 )}
             </StatBlock>
 
-            {rootAdmin && (
-                <StatBlock icon={faCalendarDay} title={'Expiration Date'}>
-                    {expDate !== '0000-00-0' ? expDate : '-/-/-'}
-                </StatBlock>
-            )}
+            {rootAdmin ||
+                (expDate && (
+                    <StatBlock icon={faCalendarDay} title={'Expiration Date'}>
+                        {expDate !== null ? expDate : '-/-/-'}
+                    </StatBlock>
+                ))}
 
             <StatBlock icon={faMicrochip} title={'CPU Load'} color={getBackgroundColor(stats.cpu, limits.cpu)}>
                 {status === 'offline' ? (

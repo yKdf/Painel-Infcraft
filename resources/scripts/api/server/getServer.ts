@@ -16,7 +16,7 @@ export interface Server {
     internalId: number | string;
     uuid: string;
     name: string;
-        expDate: string;
+    expDate: string;
     node: string;
     isNodeUnderMaintenance: boolean;
     status: ServerStatus;
