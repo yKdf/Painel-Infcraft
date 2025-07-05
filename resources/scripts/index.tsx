@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '@/components/App';
 import { setConfig } from 'react-hot-loader';
-import './IceMinecraftTheme.css';
 
 // Enable language support.
 import './i18n';

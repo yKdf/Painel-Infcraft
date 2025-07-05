@@ -15,19 +15,23 @@ export default () => {
 
     return (
         <>
-            <NavigationBar />
+            <div className={`flex flex-col items-center justify-center`}>
+                <NavigationBar />
+            </div>
             {location.pathname.startsWith('/account') && (
-                <SubNavigation>
-                    <div>
-                        {routes.account
-                            .filter((route) => !!route.name)
-                            .map(({ path, name, exact = false }) => (
-                                <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
-                                    {name}
-                                </NavLink>
-                            ))}
-                    </div>
-                </SubNavigation>
+                <div className={`flex flex-col items-center justify-center`}>
+                    <SubNavigation>
+                        <div>
+                            {routes.account
+                                .filter((route) => !!route.name)
+                                .map(({ path, name, exact = false }) => (
+                                    <NavLink key={path} to={`/account/${path}`.replace('//', '/')} exact={exact}>
+                                        {name}
+                                    </NavLink>
+                                ))}
+                        </div>
+                    </SubNavigation>
+                </div>
             )}
             <TransitionRouter>
                 <React.Suspense fallback={<Spinner centered />}>

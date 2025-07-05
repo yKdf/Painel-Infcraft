@@ -65,7 +65,9 @@ export default () => {
 
     return (
         <React.Fragment key={'server-router'}>
-            <NavigationBar />
+            <div className={`flex flex-col items-center justify-center`}>
+                <NavigationBar />
+            </div>
             {!uuid || !id ? (
                 error ? (
                     <ServerError message={error} />
@@ -75,17 +77,19 @@ export default () => {
             ) : (
                 <>
                     <CSSTransition timeout={150} classNames={'fade'} appear in>
-                        <SubNavigation>
-                            <div>
-                                <Navigation />
-                                {rootAdmin && (
-                                    // eslint-disable-next-line react/jsx-no-target-blank
-                                    <a href={`/admin/servers/view/${serverId}`} target={'_blank'}>
-                                        <FontAwesomeIcon icon={faExternalLinkAlt} />
-                                    </a>
-                                )}
-                            </div>
-                        </SubNavigation>
+                        <div className={`flex flex-col items-center justify-center`}>
+                            <SubNavigation>
+                                <div>
+                                    <Navigation />
+                                    {rootAdmin && (
+                                        // eslint-disable-next-line react/jsx-no-target-blank
+                                        <a href={`/admin/servers/view/${serverId}`} target={'_blank'}>
+                                            <FontAwesomeIcon icon={faExternalLinkAlt} />
+                                        </a>
+                                    )}
+                                </div>
+                            </SubNavigation>
+                        </div>
                     </CSSTransition>
                     <InstallListener />
                     <TransferListener />

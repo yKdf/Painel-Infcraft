@@ -468,10 +468,10 @@ export default ({ plugin, version, installedPlugins, token }: Props) => {
                             getDetails();
                         }}
                     >
-                        <img css={tw`hidden 2xl:block w-32 h-32 p-2`} src={getImage()}></img>
+                        <img css={tw`hidden 2xl:block w-16 h-16`} src={getImage()}></img>
                         <div css={tw`mx-auto`}>
                             <span css={tw`inline`}>
-                                <div css={tw`text-2xl mx-auto text-center truncate flex`}>
+                                <div css={tw`text-xl mx-auto text-center truncate flex`}>
                                     <div css={tw`text-center w-full`}>{plugin.name.substring(0, 20)}</div>
                                     <div
                                         title={
@@ -492,12 +492,6 @@ export default ({ plugin, version, installedPlugins, token }: Props) => {
                                     </div>
                                 </div>
                                 <div css={tw`flex px-12`}>
-                                    <div
-                                        css={tw`my-2 mx-auto place-self-center text-yellow-500`}
-                                        title={`${Math.round(plugin.rating.average * 10) / 10} out of 5 stars`}
-                                    >
-                                        {ratings}
-                                    </div>
                                     <div css={tw`mx-auto my-2`}>
                                         <FontAwesomeIcon icon={faDownload} />
                                         &nbsp;
@@ -505,7 +499,7 @@ export default ({ plugin, version, installedPlugins, token }: Props) => {
                                     </div>
                                 </div>
                             </span>
-                            <p css={tw`text-center`} style={{ textOverflow: 'ellipsis' }}>
+                            <p css={tw`text-center text-sm`} style={{ textOverflow: 'ellipsis' }}>
                                 {plugin.tag}
                             </p>
                         </div>

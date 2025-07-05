@@ -11,12 +11,13 @@ import { ServerContext } from '@/state/server';
 import Icon from '@/components/elements/Icon';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
-import tw from 'twin.macro';
+import tw, { css } from 'twin.macro';
 import PluginContainer from './PluginContainer';
 import { Plugin, pruneFileName, Source } from './types';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import Dialog from '@/components/elements/dialog/Dialog';
 import ConfirmationDialog from '@/components/elements/dialog/ConfirmationDialog';
+import { breakpoint } from '@/theme';
 
 export default () => {
     const name = ServerContext.useStoreState((state) => state.server.data!.name); //Name of the server
@@ -353,6 +354,14 @@ export default () => {
         setPluginsDefault();
     }, [search, page, category]);
 
+    const stylecon = css`
+        ${tw`my-5 w-full rounded-xl overflow-x-auto`}
+        max-width: 1200px;
+        ${breakpoint('xl')`
+        ${tw`mx-auto`}
+      `}
+    `;
+
     if (noPluginsFolder) {
         return (
             <>
@@ -435,8 +444,8 @@ export default () => {
                     Login
                 </button>
             </Modal>
-            <div css={tw`mx-auto my-5`}>
-                <div css={tw`mx-10 flex flex-wrap sm:flex-nowrap`}>
+            <div css={stylecon}>
+                <div css={tw`flex flex-wrap sm:flex-nowrap`}>
                     <div
                         className={`flex w-full sm:w-auto my-2 sm:my-0 ${style.rounding ?? ''} border-${
                             style.inputBorder
@@ -480,7 +489,7 @@ export default () => {
                     </div>
                     <input
                         onChange={onSearch}
-                        className={`bg-neutral-700 border-${
+                        className={`bg-gray-800 border-${
                             style.inputBorder
                         } text-lg p-2 pl-4 sm:ml-5 w-full my-2 sm:my-0 ${style.rounding ?? ''}`}
                         style={{
@@ -519,7 +528,7 @@ export default () => {
                             backgroundColor: style.primaryColor,
                             borderColor: style.secondaryColor,
                         }}
-                        className={`${style.rounding ?? ''} bg-neutral-700 border-${
+                        className={`${style.rounding ?? ''} bg-gray-800 border-${
                             style.inputBorder
                         } text-lg p-2 sm:ml-5 my-2 sm:my-0 w-full sm:w-auto text-center`}
                         value={version}
@@ -550,7 +559,7 @@ export default () => {
                             backgroundColor: style.primaryColor,
                             borderColor: style.secondaryColor,
                         }}
-                        className={`${style.rounding ?? ''} bg-neutral-700 border-${
+                        className={`${style.rounding ?? ''} bg-gray-800 border-${
                             style.inputBorder
                         } text-lg p-2 sm:ml-5 my-2 sm:my-0 w-full sm:w-auto text-center`}
                         value={category}

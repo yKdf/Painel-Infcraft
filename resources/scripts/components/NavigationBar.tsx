@@ -6,12 +6,14 @@ import { faCogs, faLayerGroup, faSignOutAlt, faExchangeAlt } from '@fortawesome/
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
-import tw, { theme } from 'twin.macro';
+import tw, { css, theme } from 'twin.macro';
 import styled from 'styled-components/macro';
 import http from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import Avatar from '@/components/Avatar';
+import ProgressBar from './elements/ProgressBar';
+import { breakpoint } from '@/theme';
 
 const RightNavigation = styled.div`
     & > a,
@@ -21,7 +23,7 @@ const RightNavigation = styled.div`
 
         &:active,
         &:hover {
-            ${tw`text-neutral-100 bg-black`};
+            ${tw`text-neutral-100 rounded-xl bg-black`};
         }
 
         &:active,
@@ -30,6 +32,14 @@ const RightNavigation = styled.div`
             box-shadow: inset 0 -2px ${theme`colors.cyan.600`.toString()};
         }
     }
+`;
+
+const style = css`
+    ${tw`w-full bg-neutral-800 rounded-xl mb-4 shadow-md overflow-x-auto`}
+    max-width: 1200px;
+    ${breakpoint('xl')`
+    ${tw`mx-auto`}
+  `}
 `;
 
 export default () => {
@@ -46,7 +56,8 @@ export default () => {
     };
 
     return (
-        <div className={'w-full bg-neutral-900 shadow-md overflow-x-auto'}>
+        <div css={style}>
+            <ProgressBar />
             <SpinnerOverlay visible={isLoggingOut} />
             <div className={'mx-auto w-full flex items-center h-[3.5rem] max-w-[1200px]'}>
                 <div id={'logo'} className={'flex-1'}>
