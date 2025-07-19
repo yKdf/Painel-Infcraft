@@ -140,8 +140,14 @@ Route::group([
         Route::post('/reinstall', [Client\Servers\SettingsController::class, 'reinstall']);
         Route::put('/docker-image', [Client\Servers\SettingsController::class, 'dockerImage']);
     });
+    Route::group(['prefix' => '/splitted'], function () {
+        Route::get('/', [Client\Servers\SplittedController::class, 'index']);
+        Route::post('/split', [Client\Servers\SplittedController::class, 'split']);
+        Route::post('/splitremove', [Client\Servers\SplittedController::class, 'delete']);
+    });
     Route::group(['prefix' => '/eggs'], function () {
         Route::get('/', [Client\Servers\EggChangerController::class, 'index']);
         Route::post('/change', [Client\Servers\EggChangerController::class, 'change']);
     });
+
 });

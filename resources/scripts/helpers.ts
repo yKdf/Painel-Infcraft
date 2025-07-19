@@ -2,6 +2,8 @@ export const randomInt = (low: number, high: number) => Math.floor(Math.random()
 
 export const cleanDirectoryPath = (path: string) => path.replace(/(\/(\/*))|(^$)/g, '/');
 
+export const bytesToMegabytes = (bytes: number) => Math.floor(bytes / 1024 / 1024);
+
 export function fileBitsToString(mode: string, directory: boolean): string {
     const m = parseInt(mode, 8);
 

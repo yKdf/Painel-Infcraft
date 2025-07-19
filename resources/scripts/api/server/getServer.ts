@@ -18,6 +18,7 @@ export interface Server {
     name: string;
     expDate: string;
     node: string;
+    eggName: string;
     isNodeUnderMaintenance: boolean;
     status: ServerStatus;
     sftpDetails: {
@@ -37,6 +38,7 @@ export interface Server {
     };
     eggFeatures: string[];
     featureLimits: {
+        splittedLimit: number;
         databases: number;
         allocations: number;
         backups: number;
@@ -55,6 +57,7 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     name: data.name,
     expDate: data.exp_date,
     node: data.node,
+    eggName: data.egg_name,
     isNodeUnderMaintenance: data.is_node_under_maintenance,
     status: data.status,
     invocation: data.invocation,

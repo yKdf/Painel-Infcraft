@@ -28,7 +28,7 @@ const IconDescription = styled.p<{ $alarm: boolean }>`
 `;
 
 const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | undefined }>`
-    ${tw`grid grid-cols-12 gap-4 relative`};
+    ${tw`grid grid-cols-12 gap-6 relative`};
 
     & .status-bar {
         ${tw`w-2 bg-red-500 absolute right-0 z-20 rounded-full m-1 opacity-50 transition-all duration-150`};

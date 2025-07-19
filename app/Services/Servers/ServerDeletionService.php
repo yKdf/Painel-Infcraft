@@ -9,6 +9,7 @@ use Illuminate\Database\ConnectionInterface;
 use Pterodactyl\Repositories\Wings\DaemonServerRepository;
 use Pterodactyl\Services\Databases\DatabaseManagementService;
 use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
+use Exception;
 
 class ServerDeletionService
 {
@@ -42,6 +43,55 @@ class ServerDeletionService
      */
     public function handle(Server $server): void
     {
+        $servers = [$server];
+        if ($server->split_masteruuid != '') {
+            $servers = Server::query()->where('split_masteruuid', $server->split_masteruuid)->get();
+
+        }
+        try {
+            foreach($servers as $oneserver) {
+                $this->daemonServerRepository->setServer($oneserver)->delete();
+            }
+        } catch (DaemonConnectionException $exception) {
+            // If there is an error not caused a 404 error and this isn't a forced delete,
+            // go ahead and bail out. We specifically ignore a 404 since that can be assumed
+            // to be a safe error, meaning the server doesn't exist at all on Wings so there
+            // is no reason we need to bail out from that.
+            if (!$this->force && $exception->getStatusCode() !== Response::HTTP_NOT_FOUND) {
+                throw $exception;
+            }
+
+            Log::warning($exception);
+        }
+
+        foreach($servers as $oneserver) {
+            $this->connection->transaction(function () use ($oneserver) {
+                foreach ($oneserver->databases as $database) {
+                    try {
+                        $this->databaseManagementService->delete($database);
+                    } catch (Exception $exception) {
+                        if (!$this->force) {
+                            throw $exception;
+                        }
+
+                        // Oh well, just try to delete the database entry we have from the database
+                        // so that the server itself can be deleted. This will leave it dangling on
+                        // the host instance, but we couldn't delete it anyways so not sure how we would
+                        // handle this better anyways.
+                        //
+                        // @see https://github.com/pterodactyl/panel/issues/2085
+                        $database->delete();
+
+                        Log::warning($exception);
+                    }
+                }
+
+                $oneserver->delete();
+            });
+        }
+    }
+    public function handlesplitted(Server $server)
+    {
         try {
             $this->daemonServerRepository->setServer($server)->delete();
         } catch (DaemonConnectionException $exception) {
@@ -60,7 +110,7 @@ class ServerDeletionService
             foreach ($server->databases as $database) {
                 try {
                     $this->databaseManagementService->delete($database);
-                } catch (\Exception $exception) {
+                } catch (Exception $exception) {
                     if (!$this->force) {
                         throw $exception;
                     }

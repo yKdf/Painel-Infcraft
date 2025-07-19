@@ -57,9 +57,6 @@ const getSource = (filename: string): Source | undefined => {
     if (!'SPM'.includes(filename.split('-')[1].split('')[0])) {
         return undefined;
     }
-    if (filename.split('-')[1].split('')[0] === 'P') {
-        return Source.Polymart;
-    }
     if (filename.split('-')[1].split('')[0] === 'M') {
         return Source.Modrinth;
     }
@@ -68,10 +65,6 @@ const getSource = (filename: string): Source | undefined => {
 
 const open = (filename: string) => {
     switch (getSource(filename)) {
-        case Source.Polymart: {
-            window.open(`https://polymart.org/resource/${filename.split('-')[1].substring(1)}`);
-            break;
-        }
         case Source.Spigot: {
             window.open(`https://spigotmc.org/resources/${filename.split('-')[1].substring(1)}`);
             break;
@@ -109,9 +102,6 @@ const FileObjectRow = ({ file }: { file: FileObject }) => (
                     open(file.name);
                 }}
             >
-                {getSource(file.name) === Source.Polymart && (
-                    <img src='/assets/plugininstaller/polymart.png' css={tw`h-8 w-8`}></img>
-                )}
                 {getSource(file.name) === Source.Spigot && (
                     <img src='/assets/plugininstaller/spigot.png' css={tw`h-8 w-8`}></img>
                 )}

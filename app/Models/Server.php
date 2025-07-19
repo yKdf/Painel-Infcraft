@@ -167,6 +167,7 @@ class Server extends Model
         'database_limit' => 'present|nullable|integer|min:0',
         'allocation_limit' => 'sometimes|nullable|integer|min:0',
         'backup_limit' => 'present|nullable|integer|min:0',
+        'split_limit' => 'present|nullable|integer|min:0',
         'exp_date' => 'sometimes|nullable',
     ];
 

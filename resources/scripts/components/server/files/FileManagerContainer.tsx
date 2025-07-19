@@ -90,15 +90,15 @@ export default () => {
             ) : (
                 <>
                     {!files.length ? (
-                        <p css={tw`text-sm text-neutral-400 text-center`}>This directory seems to be empty.</p>
+                        <p css={tw`text-sm text-neutral-400 text-center`}>Este diretório parece estar vazio.</p>
                     ) : (
                         <CSSTransition classNames={'fade'} timeout={150} appear in>
                             <div>
                                 {files.length > 250 && (
                                     <div css={tw`rounded bg-yellow-400 mb-px p-3`}>
                                         <p css={tw`text-yellow-900 text-sm text-center`}>
-                                            This directory is too large to display in the browser, limiting the output
-                                            to the first 250 files.
+                                            Este diretório é muito grande para ser exibido no navegador, limitando a
+                                            saída aos primeiros 250 arquivos.
                                         </p>
                                     </div>
                                 )}

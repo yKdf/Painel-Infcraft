@@ -15,6 +15,7 @@ import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogCon
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
 import PluginManagerContainer from '@/components/server/plugin/PluginManagerContainer';
 import EggsContainer from '@/components/server/eggs/EggsContainer';
+import SplitContainer from '@/components/server/split/SplitContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -85,6 +86,12 @@ export default {
             permission: 'file.*',
             name: 'Files',
             component: FileManagerContainer,
+        },
+        {
+            path: '/split',
+            permission: 'split.read',
+            name: 'Split',
+            component: SplitContainer,
         },
         {
             path: '/files/:action(edit|new)',

@@ -2,12 +2,10 @@ import styled from 'styled-components/macro';
 import tw, { theme } from 'twin.macro';
 
 const SubNavigation = styled.div`
-    ${tw`w-full rounded-xl bg-neutral-700 shadow overflow-x-auto`};
-    max-width: 1200px;
+    ${tw`w-auto max-w-full rounded-xl bg-neutral-700 shadow overflow-x-auto`};
 
     & > div {
         ${tw`flex items-center text-sm mx-auto px-2`};
-        max-width: 1200px;
 
         & > a,
         & > div {

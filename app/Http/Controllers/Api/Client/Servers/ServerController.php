@@ -7,6 +7,8 @@ use Pterodactyl\Transformers\Api\Client\ServerTransformer;
 use Pterodactyl\Services\Servers\GetUserPermissionsService;
 use Pterodactyl\Http\Controllers\Api\Client\ClientApiController;
 use Pterodactyl\Http\Requests\Api\Client\Servers\GetServerRequest;
+use Pterodactyl\Exceptions\DisplayException;
+use Illuminate\Support\Facades\DB;
 
 class ServerController extends ClientApiController
 {

@@ -6,7 +6,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import tw from 'twin.macro';
 import VersionContainer from '@/components/server/plugin/VersionContainer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faStar, faStarHalf } from '@fortawesome/free-solid-svg-icons';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { Dialog } from '@/components/elements/dialog';
 import sanitizeHtml from 'sanitize-html';
 import { style } from '@/components/PluginInstallerConfig';
@@ -22,10 +22,9 @@ interface Props {
     plugin: Plugin;
     version: string;
     installedPlugins: FileObject[];
-    token: string | null;
 }
 
-export default ({ plugin, version, installedPlugins, token }: Props) => {
+export default ({ plugin, version, installedPlugins }: Props) => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
 
     const [installed, setInstalled] = useState(false);
@@ -42,7 +41,7 @@ export default ({ plugin, version, installedPlugins, token }: Props) => {
 
     const [versions, setVersions] = useState<Version[]>();
 
-    const [ratings, setRatings] = useState<JSX.Element[]>();
+    // const [ratings, setRatings] = useState<JSX.Element[]>();
 
     const [page, setPage] = useState(1);
 
@@ -97,20 +96,6 @@ export default ({ plugin, version, installedPlugins, token }: Props) => {
                 setUpdateAvailable(true);
                 break;
             }
-            case Source.Polymart: {
-                const currentPlugin = await getPlugin(plugin.id, Source.Polymart);
-
-                if (!currentPlugin) {
-                    return;
-                }
-
-                if (plugin.currentVersionId === currentPlugin.versionId) {
-                    return;
-                }
-
-                setUpdateAvailable(true);
-                break;
-            }
         }
     }
 
@@ -142,24 +127,6 @@ export default ({ plugin, version, installedPlugins, token }: Props) => {
         }
 
         //Continue on since the rest of the code simply installs the latest version of the plugin
-
-        //If its Polymart
-        if (plugin.source === Source.Polymart) {
-            if (!plugin.canDownload) {
-                setOpen(true);
-                return;
-            }
-
-            //Logic for token is handled inside of downloadFileFromUrl
-            downloadFileFromUrl(
-                uuid,
-                await getDownloadUrl(plugin, plugin.id, Source.Polymart, -1, token),
-                'plugins/',
-                `${pruneFileName(plugin.name)}-P${plugin.id}-${plugin.versionId}.jar`
-            );
-            setInstalled(true);
-            return;
-        }
 
         //If its Modrinth
         if (plugin.source === Source.Modrinth) {
@@ -348,18 +315,6 @@ export default ({ plugin, version, installedPlugins, token }: Props) => {
     }
 
     useEffect(() => {
-        const r = [];
-        let rating = Math.round(plugin.rating.average * 10);
-        while (rating > 0) {
-            if (rating >= 10) {
-                r.push(<FontAwesomeIcon icon={faStar} key={Math.random()} />);
-                rating -= 10;
-            } else {
-                r.push(<FontAwesomeIcon icon={faStarHalf} key={Math.random()} />);
-                rating = 0;
-            }
-        }
-        setRatings(r);
         checkInstalled();
         checkUpdateAvailable();
     }, []);

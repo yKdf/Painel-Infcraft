@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddSplittedToServersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('servers', function (Blueprint $table) {
+            $table->char('split_masteruuid', 36);
+            $table->integer('split_limit');
+
+            
+        });
+    }
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('servers', function (Blueprint $table) {
+            $table->dropColumn('split_masteruuid');
+            $table->dropColumn('split_limit');
+
+
+        });
+    }
+}

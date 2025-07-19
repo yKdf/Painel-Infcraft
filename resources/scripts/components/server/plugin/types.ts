@@ -1,6 +1,5 @@
 export enum Source {
     Spigot = 'spigot',
-    Polymart = 'polymart',
     Modrinth = 'modrinth',
 }
 

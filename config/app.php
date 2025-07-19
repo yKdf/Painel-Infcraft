@@ -11,7 +11,7 @@ return [
     | change this value if you are not maintaining your own internal versions.
     */
 
-    'version' => '1.11.7',
+    'version' => '1.0.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Pterodactyl'),
+    'name' => env('APP_NAME', 'Infcraft'),
 
     /*
     |--------------------------------------------------------------------------

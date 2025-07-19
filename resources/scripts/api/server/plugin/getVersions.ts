@@ -4,34 +4,6 @@ import { Plugin, Source, Version } from '@/components/server/plugin/types';
 export default function (plugin: Plugin): Promise<Version[]> {
     return new Promise((resolve, reject) => {
         switch (plugin.source) {
-            case Source.Polymart: {
-                http.get(
-                    `https://proxy.fyrehost.net/?https://api.polymart.org/v1/getResourceUpdates?resource_id=${plugin.id}`,
-                    {
-                        withCredentials: false,
-                    }
-                )
-                    .then(
-                        ({
-                            data: {
-                                response: { updates },
-                            },
-                        }) => {
-                            resolve(
-                                updates.map((update: any) => ({
-                                    externalUrl: update.url,
-                                    name: update.title,
-                                    downloads: 0,
-                                    id: update.id,
-                                    description: update.description,
-                                    downloadUrl: undefined,
-                                }))
-                            );
-                        }
-                    )
-                    .catch(reject);
-                break;
-            }
             case Source.Spigot: {
                 http.get(`https://spigot.fyrehost.net/v2/resources/${plugin.id}/versions?sort=-id`, {
                     withCredentials: false,

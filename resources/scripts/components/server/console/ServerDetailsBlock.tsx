@@ -114,12 +114,11 @@ const ServerDetailsBlock = ({ className }: { className?: string }) => {
                 )}
             </StatBlock>
 
-            {rootAdmin ||
-                (expDate && (
-                    <StatBlock icon={faCalendarDay} title={'Expiration Date'}>
-                        {expDate !== null ? expDate : '-/-/-'}
-                    </StatBlock>
-                ))}
+            {rootAdmin && expDate && (
+                <StatBlock icon={faCalendarDay} title={'Expiration Date'}>
+                    {expDate}
+                </StatBlock>
+            )}
 
             <StatBlock icon={faMicrochip} title={'CPU Load'} color={getBackgroundColor(stats.cpu, limits.cpu)}>
                 {status === 'offline' ? (

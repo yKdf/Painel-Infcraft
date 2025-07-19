@@ -156,6 +156,14 @@ class Permission extends Model
                 'restore' => 'Allows a user to restore a backup for the server. Danger: this allows the user to delete all of the server files in the process.',
             ],
         ],
+        'split' => [
+            'description' => 'Permissions that control a user\'s ability to generate and manage server split.',
+            'keys' => [
+                'create' => 'Allows a user to split the server.',
+                'read' => 'Allows a user to view all splitted that exist for this server.',
+                'delete' => 'Allows a user to remove splitted server.',
+            ],
+        ],
 
         // Controls permissions for editing or viewing a server's allocations.
         'allocation' => [

@@ -1,4 +1,3 @@
-import http from '@/api/http';
 import { Source, Plugin } from '@/components/server/plugin/types';
 import getVersions from './getVersions';
 
@@ -14,49 +13,10 @@ export default function (
     plugin: Plugin, //Only for Modrinth currently
     id: number | string,
     source: Source,
-    version = -1,
-    token: string | null = null
+    version = -1
 ): Promise<string> {
     return new Promise((resolve, reject) => {
         switch (source) {
-            case Source.Polymart: {
-                if (version > -1) {
-                    resolve(`https://polymart.org/r/${id}/updates?update=${version}`);
-                } else if (token === null) {
-                    http.get(`https://api.polymart.org/v1/getDownloadURL?resource_id=${id}`, { withCredentials: false })
-                        .then(
-                            ({
-                                data: {
-                                    response: {
-                                        result: { url },
-                                    },
-                                },
-                            }) => {
-                                resolve(url);
-                            }
-                        )
-                        .catch(reject);
-                } else {
-                    http.post(
-                        `https://api.polymart.org/v1/getDownloadURL`,
-                        { resource_id: id, token: token },
-                        { withCredentials: false }
-                    )
-                        .then(
-                            ({
-                                data: {
-                                    response: {
-                                        result: { url },
-                                    },
-                                },
-                            }) => {
-                                resolve(url);
-                            }
-                        )
-                        .catch(reject);
-                }
-                break;
-            }
             case Source.Spigot: {
                 if (version > -1) {
                     resolve(`https://spigotmc.org/resources/${id}/download?version=${version}`);

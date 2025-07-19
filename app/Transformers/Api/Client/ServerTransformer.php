@@ -42,7 +42,7 @@ class ServerTransformer extends BaseClientTransformer
             'internal_id' => $server->id,
             'uuid' => $server->uuid,
             'name' => $server->name,
-                'exp_date' => $server->exp_date,
+            'exp_date' => $server->exp_date,
             'node' => $server->node->name,
             'is_node_under_maintenance' => $server->node->isUnderMaintenance(),
             'sftp_details' => [
@@ -66,6 +66,7 @@ class ServerTransformer extends BaseClientTransformer
                 'databases' => $server->database_limit,
                 'allocations' => $server->allocation_limit,
                 'backups' => $server->backup_limit,
+                'splittedLimit' => $server->split_limit,
             ],
             'status' => $server->status,
             // This field is deprecated, please use "status".

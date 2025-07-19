@@ -1,10 +1,7 @@
 import http from '@/api/http';
 import loadDirectory, { FileObject } from '@/api/server/files/loadDirectory';
-import authUser from '@/api/server/plugin/authUser';
 import getPlugin from '@/api/server/plugin/getPlugin';
 import searchPlugins from '@/api/server/plugin/searchPlugins';
-import verifyToken from '@/api/server/plugin/verifyToken';
-import Modal from '@/components/elements/Modal';
 import Spinner from '@/components/elements/Spinner';
 import { style, config } from '@/components/PluginInstallerConfig';
 import { ServerContext } from '@/state/server';
@@ -15,8 +12,6 @@ import tw, { css } from 'twin.macro';
 import PluginContainer from './PluginContainer';
 import { Plugin, pruneFileName, Source } from './types';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import Dialog from '@/components/elements/dialog/Dialog';
-import ConfirmationDialog from '@/components/elements/dialog/ConfirmationDialog';
 import { breakpoint } from '@/theme';
 
 export default () => {
@@ -32,73 +27,11 @@ export default () => {
 
     const [page, setPage] = useState(1);
 
-    const [loading, setLoading] = useState(false);
-
     const [category, setCategory] = useState(0);
 
     const [version, setVersion] = useState('Any');
 
-    const [polymartAuth, setPolymartAuth] = useState(false);
-
-    const [storageMethod, setStorageMethod] = useState('local');
-
-    const [polymartLogin, setPolymartLogin] = useState(false);
-
     const [noPluginsFolder, setNoPluginsFolder] = useState(false);
-
-    const [polymartConfirm, setPolymartConfirm] = useState(false);
-
-    const [tempPolymartToken, setTempPolymartToken] = useState('');
-
-    /**
-     * Checks what type of token it is
-     */
-    function checkToken() {
-        if (localStorage.getItem('POLYMART_API_TOKEN') !== null) {
-            setPolymartAuth(true);
-            setStorageMethod('local');
-        }
-        if (sessionStorage.getItem('POLYMART_API_TOKEN') !== null) {
-            setPolymartAuth(true);
-            setStorageMethod('session');
-        }
-    }
-
-    /**
-     * Saves the token
-     * @param token token to save
-     */
-    function saveToken(token: string) {
-        if (storageMethod === 'local') {
-            localStorage.setItem('POLYMART_API_TOKEN', token);
-        } else {
-            sessionStorage.setItem('POLYMART_API_TOKEN', token);
-        }
-    }
-
-    /**
-     * Removes the token from storage
-     */
-    function removeToken() {
-        if (storageMethod === 'local') {
-            localStorage.removeItem('POLYMART_API_TOKEN');
-        } else {
-            sessionStorage.removeItem('POLYMART_API_TOKEN');
-        }
-        setPolymartAuth(false);
-    }
-
-    /**
-     * Gets the Polymart token
-     * @returns Polymart token
-     */
-    function getToken(): string {
-        if (storageMethod === 'local') {
-            return localStorage.getItem('POLYMART_API_TOKEN')!;
-        } else {
-            return sessionStorage.getItem('POLYMART_API_TOKEN')!;
-        }
-    }
 
     async function getDefaultPage(): Promise<Plugin[]> {
         //Looking for installed plugins
@@ -133,27 +66,6 @@ export default () => {
                             plugin.currentVersionId = version; //Sets the version
 
                             //Stores the plugin data
-                            p.push(plugin);
-
-                            break;
-                        }
-                        //Polymart
-                        case 'P': {
-                            //Gets id of plugin
-                            const id = name.split('-')[1].substring(1);
-
-                            //Gets the version the plugin is on
-                            const version = parseInt(name.split('-')[2]);
-
-                            const plugin = await getPlugin(id, Source.Polymart); //Gets the plugin data
-
-                            if (!plugin) {
-                                continue;
-                            }
-
-                            plugin.currentVersionId = version; //Sets the version
-
-                            //Storages the plugin data
                             p.push(plugin);
 
                             break;
@@ -241,13 +153,7 @@ export default () => {
             return p;
         }
 
-        return await searchPlugins(
-            search,
-            category === 15 ? Source.Polymart : category === 16 ? Source.Modrinth : Source.Spigot,
-            category,
-            page,
-            getToken()
-        );
+        return await searchPlugins(search, category === 15 ? Source.Modrinth : Source.Spigot, category, page);
     }
 
     /**
@@ -306,44 +212,8 @@ export default () => {
         setPage(page - 1);
     }
 
-    /**
-     * Starts the polymart authentication
-     */
-    async function submitPolymart() {
-        setLoading(true);
-
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const charactersLength = characters.length;
-        for (let i = 0; i < charactersLength; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-
-        const res = await authUser(window.location.origin, window.location.origin, result);
-
-        window.open(res.url);
-
-        setTempPolymartToken(res.token);
-
-        setPolymartLogin(false);
-
-        setPolymartConfirm(true);
-    }
-
-    async function checkPolymart() {
-        if (await verifyToken(tempPolymartToken)) {
-            setLoading(false);
-            setPolymartAuth(true);
-            saveToken(tempPolymartToken);
-        }
-
-        setPolymartConfirm(false);
-    }
-
     useEffect(() => {
         document.title = `${name} | Plugin Manager`;
-
-        checkToken();
     }, []);
 
     useEffect(() => {
@@ -379,71 +249,6 @@ export default () => {
 
     return (
         <>
-            <ConfirmationDialog open={polymartConfirm} onClose={checkPolymart} onConfirmed={checkPolymart}>
-                Have you logged into Polymart?
-            </ConfirmationDialog>
-            <Modal
-                visible={polymartLogin}
-                onDismissed={() => {
-                    setPolymartLogin(false);
-                }}
-            >
-                <img src={'https://polymart.org/style/logoLight.png'} css={tw`mx-auto`}></img>
-                <p css={tw`text-center text-2xl font-semibold`}>
-                    Login with Polymart to download resources you have purchased.
-                </p>
-                <br />
-                <div css={tw`text-center`}>
-                    <p css={tw`text-2xl font-medium`}>How your info is managed:</p>
-                    Does NOT store access to your Polymart account. <br />
-                    The access token is stores in your browser&apos;s storage. <br />
-                    Your token can only be used to download resources. <br />
-                </div>
-                <br />
-                <br />
-                <br />
-                <br />
-                <div css={tw`text-center`}>
-                    <p css={tw`text-2xl font-medium text-red-500`}>Important</p>
-                    After your sign in, confirm, and return to the panel, You will see a error. <br />
-                    Do not worry, close the tab and return here where you will be signed into Polymart.
-                </div>
-                <br />
-                <br />
-                <div css={tw`flex w-full`}>
-                    <p css={tw`ml-auto`}>Local Storage</p>
-                    <div
-                        css={tw`relative inline-block w-10 ml-2 mr-2 align-middle select-none transition duration-200 ease-in`}
-                    >
-                        <input
-                            onChange={() => {
-                                setStorageMethod(storageMethod === 'local' ? 'session' : 'local');
-                            }}
-                            type='checkbox'
-                            name='toggle'
-                            id='toggle'
-                            css={tw`checked:right-0 absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer`}
-                        />
-                        <label
-                            htmlFor='toggle'
-                            css={tw`checked:right-0 block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer`}
-                        ></label>
-                    </div>
-                    <p css={tw`mr-auto`}>Session Storage</p>
-                </div>
-                <p css={tw`text-center`}>
-                    {storageMethod === 'local'
-                        ? 'Your account info will be stored in this browser until you log out.'
-                        : 'Your account info will be stored in this browser until you close the tab.'}
-                </p>
-                <br />
-                <button
-                    onClick={submitPolymart}
-                    css={tw`text-lg bg-green-500 hover:bg-green-400 text-white w-full rounded-lg p-1 mx-auto border-2 border-green-600`}
-                >
-                    Login
-                </button>
-            </Modal>
             <div css={stylecon}>
                 <div css={tw`flex flex-wrap sm:flex-nowrap`}>
                     <div
@@ -498,31 +303,6 @@ export default () => {
                         }}
                         placeholder={'Search'}
                     />
-                    {/* Login button
-
-                    <button
-                        onClick={() => {
-                            if (polymartAuth) {
-                                removeToken();
-                                return;
-                            }
-                            setPolymartLogin(true);
-                        }}
-                        style={{
-                            backgroundColor: style.primaryColor,
-                            borderColor: style.secondaryColor,
-                        }}
-                        className={`${style.rounding ?? ''} bg-neutral-700 border-${
-                            style.inputBorder
-                        } text-lg p-2 sm:ml-5 flex my-2 sm:my-0 w-full sm:w-auto mx-auto`}
-                    >
-                        {loading ? <Spinner size='small' /> : polymartAuth ? 'Logout' : 'Login'}
-                        <img
-                            src='https://polymart.org/style/logoLight.png'
-                            css={tw`hidden 2xl:block h-7 w-48 ml-2`}
-                        ></img>
-                    </button>
-                    */}
                     <select
                         style={{
                             backgroundColor: style.primaryColor,
@@ -576,7 +356,6 @@ export default () => {
                         <option value={7}>Tools and Utilities</option>
                         <option value={8}>Misc</option>
                         <option value={9}>Libararies / APIs</option>
-                        <option value={15}>Polymart</option>
                         <option value={16}>Modrinth</option>
                         <option value={10}>Installed</option>
                     </select>
@@ -592,7 +371,6 @@ export default () => {
                                     version={version}
                                     installedPlugins={installedPlugins ? installedPlugins : []}
                                     key={Math.random()}
-                                    token={getToken()}
                                 />
                             ))}
                         </div>

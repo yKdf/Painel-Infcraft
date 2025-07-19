@@ -11,48 +11,6 @@ export default function (id: number | string, source: Source): Promise<Plugin | 
         switch (
             source //Different API call based on which source to get information from
         ) {
-            case Source.Polymart: {
-                http.get(`https://api.polymart.org/v1/getResourceInfo?resource_id=${id}`, { withCredentials: false })
-                    .then(
-                        ({
-                            data: {
-                                response: { resource },
-                            },
-                        }) => {
-                            if (!resource) {
-                                resolve(undefined);
-                            }
-
-                            resolve({
-                                id: resource.id,
-                                name: resource.title,
-                                tag: resource.subtitle,
-                                premium: resource.price !== '0.00',
-                                external: resource.price !== '0.00', //If the plugin is paid it cannot be installed and should instead open the resource page
-                                file: {
-                                    externalUrl: resource.url,
-                                },
-                                rating: {
-                                    average: resource.reviews.stars,
-                                },
-                                icon: resource.thumbnailURL,
-                                testedVersions: resource.supportedMinecraftVersions,
-                                price: parseFloat(resource.price),
-                                currency: resource.currency,
-                                version: resource.updates.latest.version,
-                                creationTime: new Date(),
-                                lastUpdateTime: new Date(resource.updates.latest.time),
-                                canDownload: resource.price !== '0.00', //The user cannot download it if is paid
-                                source: Source.Polymart,
-                                versionId: resource.updates.latest.id,
-                                currentVersionId: undefined,
-                                downloads: parseInt(resource.downloads),
-                            });
-                        }
-                    )
-                    .catch(reject);
-                break;
-            }
             case Source.Spigot: {
                 http.get(`https://spigot.fyrehost.net/v2/resources/${id}`, { withCredentials: false })
                     .then(({ data }) => {

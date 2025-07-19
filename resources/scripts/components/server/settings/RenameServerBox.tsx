@@ -62,8 +62,8 @@ export default () => {
         <Formik
             onSubmit={submit}
             initialValues={{
-                name: server.name,
-                description: server.description,
+                name: server.name || '',
+                description: server.description || '',
             }}
             validationSchema={object().shape({
                 name: string().required().min(1),

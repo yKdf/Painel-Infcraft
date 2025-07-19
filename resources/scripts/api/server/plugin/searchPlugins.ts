@@ -1,44 +1,6 @@
 import http from '@/api/http';
 import { config } from '@/components/PluginInstallerConfig';
 import { Plugin, Source } from '@/components/server/plugin/types';
-import getPlugin from './getPlugin';
-
-/**
- * Gets a polymart plugin with extra details
- * @param id Id of the plugin
- * @param canDownload If the user can download the plugin (premium resources)
- * @param url The url of the plugin
- * @returns The plugin
- */
-async function getPolymartPlugin(id: number, canDownload: boolean, url: string): Promise<Plugin> {
-    const req: Plugin = (await getPlugin(id, Source.Polymart)) as Plugin;
-
-    return {
-        id: req.id,
-        name: req.name,
-        tag: req.tag,
-        premium: !(req.price === 0),
-        external: canDownload,
-        file: {
-            externalUrl: url,
-        },
-        rating: {
-            average: req.rating.average,
-        },
-        icon: req.icon,
-        testedVersions: req.testedVersions,
-        price: req.price,
-        currency: req.currency,
-        version: req.version,
-        creationTime: req.creationTime,
-        lastUpdateTime: req.lastUpdateTime,
-        canDownload: canDownload,
-        source: Source.Polymart,
-        versionId: req.versionId,
-        currentVersionId: undefined,
-        downloads: req.downloads,
-    };
-}
 
 /**
  * Searches for a plugin
@@ -48,13 +10,7 @@ async function getPolymartPlugin(id: number, canDownload: boolean, url: string):
  * @param page The page number
  * @param polymartToken The polymart token, if applicable
  */
-export default function (
-    search: string,
-    source: Source,
-    category: number,
-    page: number,
-    polymartToken?: string
-): Promise<Plugin[]> {
+export default function (search: string, source: Source, category: number, page: number): Promise<Plugin[]> {
     return new Promise((resolve, reject) => {
         switch (source) {
             case Source.Spigot: {
@@ -95,40 +51,6 @@ export default function (
                             }))
                         );
                     })
-                    .catch(reject);
-                break;
-            }
-            case Source.Polymart: {
-                let url = `https://api.polymart.org/v1/search?limit=${config.amountPerPage}&referrer=${
-                    config.polymartReferral
-                }&start=${(page - 1) * config.amountPerPage + 1}`;
-
-                if (search.length > 0) {
-                    url = `https://api.polymart.org/v1/search?limit=${config.amountPerPage}&referrer=${
-                        config.polymartReferral
-                    }&start=${(page - 1) * config.amountPerPage + 1}&query=${search}`;
-                }
-
-                if (polymartToken) {
-                    url += `&token=${polymartToken}`;
-                }
-
-                http.post(url, JSON.stringify({ token: polymartToken ? polymartToken : '' }), {
-                    withCredentials: false,
-                })
-                    .then(
-                        ({
-                            data: {
-                                response: { result },
-                            },
-                        }) => {
-                            const res: Promise<Plugin>[] = result.map((plugin: any) =>
-                                getPolymartPlugin(plugin.id, plugin.canDownload, plugin.url)
-                            );
-
-                            resolve(Promise.all(res));
-                        }
-                    )
                     .catch(reject);
                 break;
             }

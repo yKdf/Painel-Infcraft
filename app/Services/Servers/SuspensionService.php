@@ -43,18 +43,28 @@ class SuspensionService
         }
 
         // Update the server's suspension status.
-        $server->update([
-            'status' => $isSuspending ? Server::STATUS_SUSPENDED : null,
-        ]);
+        $servers = [$server];
+        if ($server->split_masteruuid != '') {
+            $servers = Server::query()->where('split_masteruuid', $server->split_masteruuid)->get();
+        }
+        foreach($servers as $oneserver) {
+            $oneserver->update([
+                'status' => $isSuspending ? Server::STATUS_SUSPENDED : null,
+            ]);
+        }
 
         try {
             // Tell wings to re-sync the server state.
-            $this->daemonServerRepository->setServer($server)->sync();
+            foreach($servers as $oneserver) {
+                $this->daemonServerRepository->setServer($oneserver)->sync();
+            }
         } catch (\Exception $exception) {
             // Rollback the server's suspension status if wings fails to sync the server.
-            $server->update([
-                'status' => $isSuspending ? null : Server::STATUS_SUSPENDED,
-            ]);
+            foreach($servers as $oneserver) {
+                $oneserver->update([
+                    'status' => $isSuspending ? Server::STATUS_SUSPENDED : null,
+                ]);
+            }
             throw $exception;
         }
     }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCogs, faLayerGroup, faSignOutAlt, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faLayerGroup, faSignOutAlt, faExchangeAlt, faSignal } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
@@ -43,7 +43,6 @@ const style = css`
 `;
 
 export default () => {
-    const name = useStoreState((state: ApplicationStore) => state.settings.data!.name);
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -68,6 +67,11 @@ export default () => {
                 </div>
                 <RightNavigation className={'flex h-full items-center justify-center'}>
                     <SearchContainer />
+                    <Tooltip placement={'bottom'} content={'Status'}>
+                        <a href={'https://status.infcraft.net/'} rel={'noreferrer'} target={'_blank'}>
+                            <FontAwesomeIcon icon={faSignal} />
+                        </a>
+                    </Tooltip>
                     <Tooltip placement={'bottom'} content={'Painel'}>
                         <NavLink to={'/'} exact>
                             <FontAwesomeIcon icon={faLayerGroup} />

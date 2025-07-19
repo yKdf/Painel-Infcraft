@@ -1,14 +1,12 @@
 import TransferListener from '@/components/server/TransferListener';
 import React, { useEffect, useState } from 'react';
-import { NavLink, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import NavigationBar from '@/components/NavigationBar';
-import TransitionRouter from '@/TransitionRouter';
 import WebsocketHandler from '@/components/server/WebsocketHandler';
 import { ServerContext } from '@/state/server';
 import { CSSTransition } from 'react-transition-group';
-import Can from '@/components/elements/Can';
 import Spinner from '@/components/elements/Spinner';
-import { NotFound, ServerError } from '@/components/elements/ScreenBlock';
+import { ServerError } from '@/components/elements/ScreenBlock';
 import { httpErrorToHuman } from '@/api/http';
 import { useStoreState } from 'easy-peasy';
 import SubNavigation from '@/components/elements/SubNavigation';
@@ -18,8 +16,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router';
 import ConflictStateRenderer from '@/components/server/ConflictStateRenderer';
-import PermissionRoute from '@/components/elements/PermissionRoute';
-import routes from '@/routers/routes';
 import { Navigation, ComponentLoader } from '@/routers/ServerElements';
 
 export default () => {
@@ -35,13 +31,6 @@ export default () => {
     const serverId = ServerContext.useStoreState((state) => state.server.data?.internalId);
     const getServer = ServerContext.useStoreActions((actions) => actions.server.getServer);
     const clearServerState = ServerContext.useStoreActions((actions) => actions.clearServerState);
-
-    const to = (value: string, url = false) => {
-        if (value === '/') {
-            return url ? match.url : match.path;
-        }
-        return `${(url ? match.url : match.path).replace(/\/*$/, '')}/${value.replace(/^\/+/, '')}`;
-    };
 
     useEffect(
         () => () => {
