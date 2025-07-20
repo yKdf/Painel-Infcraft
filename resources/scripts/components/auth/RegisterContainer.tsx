@@ -5,7 +5,7 @@ import RegisterFormContainer from '@/components/auth/LoginFormContainer';
 import { useStoreState } from 'easy-peasy';
 import { Formik, FormikHelpers } from 'formik';
 import Field from '@/components/elements/Field';
-import tw from 'twin.macro';
+import tw, { styled } from 'twin.macro';
 import Button from '@/components/elements/Button';
 import Reaptcha from 'reaptcha';
 import useFlash from '@/plugins/useFlash';
@@ -67,9 +67,6 @@ const RegisterContainer = () => {
 
                 const data = JSON.parse(error.config.data);
 
-                if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]*[a-zA-Z0-9]$/.test(data.username))
-                    error =
-                        'O nome de usuário deve começar e terminar com caracteres alfanuméricos e conter apenas letras, números, travessões, sublinhados e pontos.';
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
                     error = 'O e-mail deve ser um endereço de e-mail válido.';
 
@@ -85,6 +82,12 @@ const RegisterContainer = () => {
                 }
             });
     };
+    const ButtonLink = styled(Link)`
+        ${tw`rounded-xl bg-neutral-900 p-4 text-xs tracking-wide no-underline uppercase hover:text-neutral-300 hover:bg-neutral-800 transition-colors duration-200`};
+        &:hover {
+            ${tw`text-neutral-300 bg-neutral-800`};
+        }
+    `;
 
     return (
         <Formik
@@ -99,17 +102,13 @@ const RegisterContainer = () => {
             }}
             validationSchema={object().shape({
                 email: string().required('Um e-mail deve ser fornecido.'),
-                username: string().required('Um nome de usuário deve ser fornecido.'),
-                firstname: string().optional(),
-                lastname: string().optional(),
                 password: string().required('A senha deve ser fornecida.'),
                 confirmPassword: string()
                     .required('A confirmação da senha deve ser fornecida.')
                     .test('password-match', 'As senhas devem corresponder.', function (value) {
                         const { password } = this.parent;
                         return password === value || !value;
-                    })
-                    .required('A confirmação da senha deve ser fornecida.'),
+                    }),
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
@@ -122,38 +121,6 @@ const RegisterContainer = () => {
                         placeholder={'example@gmail.com'}
                         disabled={isSubmitting}
                     />
-                    <div css={tw`mt-6`}>
-                        <Field
-                            light
-                            type={'text'}
-                            label={'Nome de usuário'}
-                            name={'username'}
-                            placeholder={'Nome de usuário'}
-                            disabled={isSubmitting}
-                        />
-                    </div>
-                    <div css={tw`mt-6`}>
-                        <Field
-                            light
-                            type={'text'}
-                            label={'Primeiro nome (Opcional)'}
-                            name={'firstname'}
-                            placeholder={'Primeiro nome'}
-                            disabled={isSubmitting}
-                        />
-                    </div>
-                    {/*
-                    <div css={tw`mt-6`}>
-                        <Field
-                            light
-                            type={'text'}
-                            label={'Sobrenome'}
-                            name={'lastname'}
-                            placeholder={'Sobrenome'}
-                            disabled={isSubmitting}
-                        />
-                    </div>
-                    */}
                     <div css={tw`mt-6`}>
                         <Field
                             light
@@ -195,13 +162,8 @@ const RegisterContainer = () => {
                             }}
                         />
                     )}
-                    <div css={tw`mt-6 text-center`}>
-                        <Link
-                            to={'/auth/login'}
-                            css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600 hover:underline`}
-                        >
-                            Já está cadastrado?
-                        </Link>
+                    <div css={tw`p-4 mt-2 text-center`}>
+                        <ButtonLink to={'/auth/login'}>Já está cadastrado?</ButtonLink>
                     </div>
                 </RegisterFormContainer>
             )}

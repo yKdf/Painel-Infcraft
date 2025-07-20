@@ -8,7 +8,7 @@ import { useStoreState } from 'easy-peasy';
 import Field from '@/components/elements/Field';
 import { Formik, FormikHelpers } from 'formik';
 import { object, string } from 'yup';
-import tw from 'twin.macro';
+import tw, { styled } from 'twin.macro';
 import Button from '@/components/elements/Button';
 import Reaptcha from 'reaptcha';
 import useFlash from '@/plugins/useFlash';
@@ -61,6 +61,13 @@ export default () => {
             });
     };
 
+    const ButtonLink = styled(Link)`
+        ${tw`rounded-xl bg-neutral-900 p-4 text-xs tracking-wide no-underline uppercase hover:text-neutral-300 hover:bg-neutral-800 transition-colors duration-200`};
+        &:hover {
+            ${tw`text-neutral-300 bg-neutral-800`};
+        }
+    `;
+
     return (
         <Formik
             onSubmit={handleSubmission}
@@ -102,13 +109,8 @@ export default () => {
                             }}
                         />
                     )}
-                    <div css={tw`mt-6 text-center`}>
-                        <Link
-                            to={'/auth/login'}
-                            css={tw`text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700 hover:underline`}
-                        >
-                            Voltar para Login
-                        </Link>
+                    <div css={tw`p-4 mt-2 text-center`}>
+                        <ButtonLink to={'/auth/login'}>Voltar para Login</ButtonLink>
                     </div>
                 </LoginFormContainer>
             )}

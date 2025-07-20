@@ -32,10 +32,10 @@ class AccountCreated extends Notification implements ShouldQueue
      */
     public function toMail(): MailMessage
     {
+        $emailUser = explode('@', $this->user->email)[0];
         $message = (new MailMessage())
-            ->greeting('Olá ' . $this->user->name_first . '!')
+            ->greeting('Olá ' . $emailUser . '!')
             ->line('Você está recebendo este e-mail porque foi criado uma conta no ' . config('app.name') . '.')
-            ->line('Nome de usuário: ' . $this->user->username)
             ->line('Email: ' . $this->user->email)
             ->line('Obrigado por usar nossa aplicação!')
             ->action('Acesse sua conta', url('/login'));

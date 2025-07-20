@@ -2,20 +2,8 @@ import styled, { css } from 'styled-components/macro';
 import tw from 'twin.macro';
 
 export interface Props {
-    isLight?: boolean;
     hasError?: boolean;
 }
-
-const light = css<Props>`
-    ${tw`bg-white border-neutral-200 text-neutral-800`};
-    &:focus {
-        ${tw`border-primary-400`}
-    }
-
-    &:disabled {
-        ${tw`bg-neutral-100 border-neutral-200`};
-    }
-`;
 
 const checkboxStyle = css<Props>`
     ${tw`bg-neutral-500 cursor-pointer appearance-none inline-block align-middle select-none flex-shrink-0 w-4 h-4 text-primary-400 border border-neutral-300 rounded-sm`};
@@ -62,7 +50,6 @@ const inputStyle = css<Props>`
         ${tw`opacity-75`};
     }
 
-    ${(props) => props.isLight && light};
     ${(props) => props.hasError && tw`text-red-100 border-red-400 hover:border-red-300`};
 `;
 

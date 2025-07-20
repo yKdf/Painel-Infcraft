@@ -13,6 +13,7 @@ use Pterodactyl\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Pterodactyl\Services\Users\UserCreationService;
+use Illuminate\Support\Str;
 
 abstract class AbstractRegisterController extends Controller
 {
@@ -70,11 +71,13 @@ abstract class AbstractRegisterController extends Controller
 
         $user = new UserCreationService($connection, $hasher, $passwordBroker, $repository);
 
+        $generatedUsername = Str::random(8);
+
         $user->handle([
             'email' => $request->input('email'),
-            'username' => $request->input('username'),
-            'name_first' => $request['firstname'] ?? $request['username'],
-            'name_last' => $request['lastname'] ?? $request['username'],
+            'username' => $generatedUsername,
+            'name_first' => $generatedUsername,
+            'name_last' => $generatedUsername,
             'password' => $request->input('password'),
         ]);
 

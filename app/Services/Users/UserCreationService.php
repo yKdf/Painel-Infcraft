@@ -9,6 +9,7 @@ use Illuminate\Database\ConnectionInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Pterodactyl\Notifications\AccountCreated;
 use Pterodactyl\Contracts\Repository\UserRepositoryInterface;
+use Illuminate\Support\Str;
 
 class UserCreationService
 {
@@ -34,6 +35,19 @@ class UserCreationService
         if (array_key_exists('password', $data) && !empty($data['password'])) {
             $data['password'] = $this->hasher->make($data['password']);
         }
+
+        $generatedUsername = Str::random(8);
+
+        if (!isset($data['username']) || empty($data['username'])) {
+        $data['username'] = $generatedUsername;
+        }
+        if (!isset($data['name_first']) || empty($data['name_first'])) {
+        $data['name_first'] = $generatedUsername;
+        }
+        if (!isset($data['name_last']) || empty($data['name_last'])) {
+        $data['name_last'] = $generatedUsername;
+        }
+
 
         $this->connection->beginTransaction();
         if (!isset($data['password']) || empty($data['password'])) {

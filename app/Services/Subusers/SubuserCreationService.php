@@ -55,11 +55,13 @@ class SubuserCreationService
                 // to the end to make it "unique"...
                 $username = substr(preg_replace('/([^\w\.-]+)/', '', strtok($email, '@')), 0, 64) . Str::random(3);
 
+                $generatedUsername = Str::random(8);
+
                 $user = $this->userCreationService->handle([
                     'email' => $email,
-                    'username' => $username,
-                    'name_first' => 'Server',
-                    'name_last' => 'Subuser',
+                    'username' => $generatedUsername,
+                    'name_first' => $generatedUsername,
+                    'name_last' => $generatedUsername,
                     'root_admin' => false,
                 ]);
             }

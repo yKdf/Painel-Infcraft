@@ -6,7 +6,7 @@ import { useStoreState } from 'easy-peasy';
 import { Formik, FormikHelpers } from 'formik';
 import { object, string } from 'yup';
 import Field from '@/components/elements/Field';
-import tw from 'twin.macro';
+import tw, { styled } from 'twin.macro';
 import Button from '@/components/elements/Button';
 import Reaptcha from 'reaptcha';
 import useFlash from '@/plugins/useFlash';
@@ -64,6 +64,13 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
             });
     };
 
+    const ButtonLink = styled(Link)`
+        ${tw`rounded-xl bg-neutral-900 p-4 text-xs tracking-wide no-underline uppercase hover:text-neutral-300 hover:bg-neutral-800 transition-colors duration-200`};
+        &:hover {
+            ${tw`text-neutral-300 bg-neutral-800`};
+        }
+    `;
+
     return (
         <Formik
             onSubmit={onSubmit}
@@ -74,7 +81,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
-                <LoginFormContainer title={'Faça login para continuar'} css={tw`w-full flex`}>
+                <LoginFormContainer title={'Bem-Vindo!'} css={tw`w-full flex`}>
                     <Field
                         light
                         type={'text'}
@@ -115,25 +122,11 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                             }}
                         />
                     )}
-                    <div css={tw`mt-6 text-center`}>
-                        <Link
-                            to={'/auth/password'}
-                            css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:underline`}
-                        >
-                            Esqueceu sua senha?
-                        </Link>
+                    <div css={tw`p-4 mt-2 text-center`}>
+                        <ButtonLink to={'/auth/password'}>Esqueceu sua senha?</ButtonLink>
                     </div>
-                    <div css={tw`mt-6 text-center space-x-2`}>
-                        <span css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase`}>
-                            Não tem uma conta?
-                        </span>
-                        <Link
-                            to={'/auth/register'}
-                            css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:underline`}
-                            target={'_self'}
-                        >
-                            Inscreva-se
-                        </Link>
+                    <div css={tw`p-4 text-center space-x-2`}>
+                        <ButtonLink to={'/auth/register'}>Não tem uma conta?</ButtonLink>
                     </div>
                 </LoginFormContainer>
             )}

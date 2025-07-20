@@ -27,13 +27,7 @@ const Field = forwardRef<HTMLInputElement, Props>(
                                 {label}
                             </Label>
                         )}
-                        <Input
-                            id={id}
-                            {...field}
-                            {...props}
-                            isLight={light}
-                            hasError={!!(touched[field.name] && errors[field.name])}
-                        />
+                        <Input id={id} {...field} {...props} hasError={!!(touched[field.name] && errors[field.name])} />
                         {touched[field.name] && errors[field.name] ? (
                             <p className={'input-help error'}>
                                 {(errors[field.name] as string).charAt(0).toUpperCase() +
