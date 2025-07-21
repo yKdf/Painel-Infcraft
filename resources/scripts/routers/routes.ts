@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React from 'react';
 import ServerConsole from '@/components/server/console/ServerConsoleContainer';
 import DatabasesContainer from '@/components/server/databases/DatabasesContainer';
 import ScheduleContainer from '@/components/server/schedules/ScheduleContainer';
@@ -16,14 +16,8 @@ import ServerActivityLogContainer from '@/components/server/ServerActivityLogCon
 import PluginManagerContainer from '@/components/server/plugin/PluginManagerContainer';
 import EggsContainer from '@/components/server/eggs/EggsContainer';
 import SplitContainer from '@/components/server/split/SplitContainer';
-
-// Each of the router files is already code split out appropriately — so
-// all of the items above will only be loaded in when that router is loaded.
-//
-// These specific lazy loaded routes are to avoid loading in heavy screens
-// for the server dashboard when they're only needed for specific instances.
-const FileEditContainer = lazy(() => import('@/components/server/files/FileEditContainer'));
-const ScheduleEditContainer = lazy(() => import('@/components/server/schedules/ScheduleEditContainer'));
+import FileEditContainer from '@/components/server/files/FileEditContainer';
+import ScheduleEditContainer from '@/components/server/schedules/ScheduleEditContainer';
 
 interface RouteDefinition {
     path: string;

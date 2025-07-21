@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Route, Router, Switch } from 'react-router-dom';
 import { StoreProvider } from 'easy-peasy';
@@ -11,12 +11,10 @@ import { setupInterceptors } from '@/api/interceptors';
 import AuthenticatedRoute from '@/components/elements/AuthenticatedRoute';
 import { ServerContext } from '@/state/server';
 import '@/assets/tailwind.css';
+import AuthenticationRouter from '@/routers/AuthenticationRouter';
+import ServerRouter from '@/routers/ServerRouter';
+import DashboardRouter from '@/routers/DashboardRouter';
 import Spinner from '@/components/elements/Spinner';
-
-const DashboardRouter = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/routers/DashboardRouter'));
-const ServerRouter = lazy(() => import(/* webpackChunkName: "server" */ '@/routers/ServerRouter'));
-const AuthenticationRouter = lazy(() => import(/* webpackChunkName: "auth" */ '@/routers/AuthenticationRouter'));
-
 interface ExtendedWindow extends Window {
     SiteConfiguration?: SiteSettings;
     PterodactylUser?: {
