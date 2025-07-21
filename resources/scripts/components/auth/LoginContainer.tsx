@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import login from '@/api/auth/login';
 import LoginFormContainer from '@/components/auth/LoginFormContainer';
@@ -8,7 +8,7 @@ import { object, string } from 'yup';
 import Field from '@/components/elements/Field';
 import tw, { styled } from 'twin.macro';
 import Button from '@/components/elements/Button';
-import Reaptcha from 'reaptcha';
+import Turnstile from 'react-cloudflare-turnstile';
 import useFlash from '@/plugins/useFlash';
 
 interface Values {
@@ -17,10 +17,10 @@ interface Values {
 }
 
 const LoginContainer = ({ history }: RouteComponentProps) => {
-    const ref = useRef<Reaptcha>(null);
     const [token, setToken] = useState('');
+    const [turnstileKey, setTurnstileKey] = useState(0);
 
-    const { clearFlashes, clearAndAddHttpError } = useFlash();
+    const { clearFlashes, clearAndAddHttpError, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
 
     useEffect(() => {
@@ -33,18 +33,15 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
         // If there is no token in the state yet, request the token and then abort this submit request
         // since it will be re-submitted when the recaptcha data is returned by the component.
         if (recaptchaEnabled && !token) {
-            ref.current!.execute().catch((error) => {
-                console.error(error);
-
-                setSubmitting(false);
-                clearAndAddHttpError({ error });
-            });
-
+            setSubmitting(false);
+            addFlash({ type: 'error', title: 'Erro', message: 'Valide o CAPTCHA antes de continuar.' });
+            setTurnstileKey((prev) => prev + 1);
             return;
         }
 
         login({ ...values, recaptchaData: token })
             .then((response) => {
+                console.log(response);
                 if (response.complete) {
                     // @ts-expect-error this is valid
                     window.location = response.intended || '/';
@@ -57,7 +54,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                 console.error(error);
 
                 setToken('');
-                if (ref.current) ref.current.reset();
+                setTurnstileKey((prev) => prev + 1);
 
                 setSubmitting(false);
                 clearAndAddHttpError({ error });
@@ -80,7 +77,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                 password: string().required('Por favor, digite a senha da sua conta.'),
             })}
         >
-            {({ isSubmitting, setSubmitting, submitForm }) => (
+            {({ isSubmitting }) => (
                 <LoginFormContainer title={'Bem-Vindo!'} css={tw`w-full flex`}>
                     <Field
                         light
@@ -102,26 +99,25 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                         />
                     </div>
 
+                    {recaptchaEnabled && (
+                        <div css={tw`mt-6 flex justify-center`}>
+                            <Turnstile
+                                key={turnstileKey}
+                                turnstileSiteKey={siteKey || '_invalid_key'}
+                                callback={(token: string) => setToken(token)}
+                                expiredCallback={() => setToken('')}
+                                theme='dark'
+                                execution={'render'}
+                            />
+                        </div>
+                    )}
+
                     <div css={tw`mt-6`}>
                         <Button type={'submit'} size={'xlarge'} isLoading={isSubmitting} disabled={isSubmitting}>
                             Login
                         </Button>
                     </div>
-                    {recaptchaEnabled && (
-                        <Reaptcha
-                            ref={ref}
-                            size={'invisible'}
-                            sitekey={siteKey || '_invalid_key'}
-                            onVerify={(response) => {
-                                setToken(response);
-                                submitForm();
-                            }}
-                            onExpire={() => {
-                                setSubmitting(false);
-                                setToken('');
-                            }}
-                        />
-                    )}
+
                     <div css={tw`p-4 mt-2 text-center`}>
                         <ButtonLink to={'/auth/password'}>Esqueceu sua senha?</ButtonLink>
                     </div>

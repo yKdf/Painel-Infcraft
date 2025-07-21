@@ -9,7 +9,7 @@ return [
     /*
      * API endpoint for recaptcha checks. You should not edit this.
      */
-    'domain' => env('RECAPTCHA_DOMAIN', 'https://www.google.com/recaptcha/api/siteverify'),
+    'domain' => env('RECAPTCHA_DOMAIN', 'https://challenges.cloudflare.com/turnstile/v0/siteverify'),
 
     /*
      * Use a custom secret key, we use our public one by default

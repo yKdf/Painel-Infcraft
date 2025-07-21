@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import register from '@/api/auth/register';
 import RegisterFormContainer from '@/components/auth/LoginFormContainer';
@@ -7,7 +7,7 @@ import { Formik, FormikHelpers } from 'formik';
 import Field from '@/components/elements/Field';
 import tw, { styled } from 'twin.macro';
 import Button from '@/components/elements/Button';
-import Reaptcha from 'reaptcha';
+import Turnstile from 'react-cloudflare-turnstile';
 import useFlash from '@/plugins/useFlash';
 import { object, string } from 'yup';
 
@@ -21,8 +21,8 @@ interface Values {
 }
 
 const RegisterContainer = () => {
-    const ref = useRef<Reaptcha>(null);
     const [token, setToken] = useState('');
+    const [turnstileKey, setTurnstileKey] = useState(0);
 
     const { clearFlashes, clearAndAddHttpError, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
@@ -37,13 +37,9 @@ const RegisterContainer = () => {
         // If there is no token in the state yet, request the token and then abort this submit request
         // since it will be re-submitted when the recaptcha data is returned by the component.
         if (recaptchaEnabled && !token) {
-            ref.current!.execute().catch((error) => {
-                console.error(error);
-
-                setSubmitting(false);
-                clearAndAddHttpError({ error });
-            });
-
+            setSubmitting(false);
+            addFlash({ type: 'error', title: 'Erro', message: 'Valide o CAPTCHA antes de continuar.' });
+            setTurnstileKey((prev) => prev + 1);
             return;
         }
 
@@ -63,7 +59,7 @@ const RegisterContainer = () => {
                 console.error(error);
 
                 setToken('');
-                if (ref.current) ref.current.reset();
+                setTurnstileKey((prev) => prev + 1);
 
                 const data = JSON.parse(error.config.data);
 
@@ -111,7 +107,7 @@ const RegisterContainer = () => {
                     }),
             })}
         >
-            {({ isSubmitting, setSubmitting, submitForm }) => (
+            {({ isSubmitting }) => (
                 <RegisterFormContainer title={'Inscreva-se'} css={tw`w-full flex`}>
                     <Field
                         light
@@ -141,27 +137,22 @@ const RegisterContainer = () => {
                             disabled={isSubmitting}
                         />
                     </div>
+                    {recaptchaEnabled && (
+                        <div css={tw`mt-6 flex justify-center`}>
+                            <Turnstile
+                                key={turnstileKey}
+                                turnstileSiteKey={siteKey || '_invalid_key'}
+                                callback={(token: string) => setToken(token)}
+                                expiredCallback={() => setToken('')}
+                                theme='dark'
+                            />
+                        </div>
+                    )}
                     <div css={tw`mt-6`}>
                         <Button type={'submit'} size={'xlarge'} isLoading={isSubmitting} disabled={isSubmitting}>
                             Cadastre-se
                         </Button>
                     </div>
-
-                    {recaptchaEnabled && (
-                        <Reaptcha
-                            ref={ref}
-                            size={'invisible'}
-                            sitekey={siteKey || '_invalid_key'}
-                            onVerify={(response) => {
-                                setToken(response);
-                                submitForm();
-                            }}
-                            onExpire={() => {
-                                setSubmitting(false);
-                                setToken('');
-                            }}
-                        />
-                    )}
                     <div css={tw`p-4 mt-2 text-center`}>
                         <ButtonLink to={'/auth/login'}>Já está cadastrado?</ButtonLink>
                     </div>

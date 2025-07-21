@@ -28,12 +28,12 @@ class VerifyReCaptcha
             return $next($request);
         }
 
-        if ($request->filled('g-recaptcha-response')) {
+        if ($request->filled('recaptchaData')) {
             $client = new Client();
             $res = $client->post($this->config->get('recaptcha.domain'), [
                 'form_params' => [
                     'secret' => $this->config->get('recaptcha.secret_key'),
-                    'response' => $request->input('g-recaptcha-response'),
+                    'response' => $request->input('recaptchaData'),
                 ],
             ]);
 

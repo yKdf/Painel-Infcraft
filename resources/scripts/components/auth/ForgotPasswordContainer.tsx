@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import requestPasswordResetEmail from '@/api/auth/requestPasswordResetEmail';
 import { httpErrorToHuman } from '@/api/http';
@@ -10,7 +10,7 @@ import { Formik, FormikHelpers } from 'formik';
 import { object, string } from 'yup';
 import tw, { styled } from 'twin.macro';
 import Button from '@/components/elements/Button';
-import Reaptcha from 'reaptcha';
+import Turnstile from 'react-cloudflare-turnstile';
 import useFlash from '@/plugins/useFlash';
 
 interface Values {
@@ -18,8 +18,8 @@ interface Values {
 }
 
 export default () => {
-    const ref = useRef<Reaptcha>(null);
     const [token, setToken] = useState('');
+    const [turnstileKey, setTurnstileKey] = useState(0);
 
     const { clearFlashes, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
@@ -34,13 +34,9 @@ export default () => {
         // If there is no token in the state yet, request the token and then abort this submit request
         // since it will be re-submitted when the recaptcha data is returned by the component.
         if (recaptchaEnabled && !token) {
-            ref.current!.execute().catch((error) => {
-                console.error(error);
-
-                setSubmitting(false);
-                addFlash({ type: 'error', title: 'Error', message: httpErrorToHuman(error) });
-            });
-
+            setSubmitting(false);
+            addFlash({ type: 'error', title: 'Erro', message: 'Valide o CAPTCHA antes de continuar.' });
+            setTurnstileKey((prev) => prev + 1);
             return;
         }
 
@@ -55,7 +51,7 @@ export default () => {
             })
             .then(() => {
                 setToken('');
-                if (ref.current) ref.current.reset();
+                setTurnstileKey((prev) => prev + 1);
 
                 setSubmitting(false);
             });
@@ -78,7 +74,7 @@ export default () => {
                     .required('Um endereço de e-mail válido deve ser fornecido para continuar.'),
             })}
         >
-            {({ isSubmitting, setSubmitting, submitForm }) => (
+            {({ isSubmitting }) => (
                 <LoginFormContainer title={'Solicitar redefinição de senha'} css={tw`w-full flex`}>
                     <Field
                         light
@@ -89,26 +85,22 @@ export default () => {
                         name={'email'}
                         type={'email'}
                     />
+                    {recaptchaEnabled && (
+                        <div css={tw`mt-6 flex justify-center`}>
+                            <Turnstile
+                                key={turnstileKey}
+                                turnstileSiteKey={siteKey || '_invalid_key'}
+                                callback={(token: string) => setToken(token)}
+                                expiredCallback={() => setToken('')}
+                                theme='dark'
+                            />
+                        </div>
+                    )}
                     <div css={tw`mt-6`}>
                         <Button type={'submit'} size={'xlarge'} disabled={isSubmitting} isLoading={isSubmitting}>
                             Enviar Email
                         </Button>
                     </div>
-                    {recaptchaEnabled && (
-                        <Reaptcha
-                            ref={ref}
-                            size={'invisible'}
-                            sitekey={siteKey || '_invalid_key'}
-                            onVerify={(response) => {
-                                setToken(response);
-                                submitForm();
-                            }}
-                            onExpire={() => {
-                                setSubmitting(false);
-                                setToken('');
-                            }}
-                        />
-                    )}
                     <div css={tw`p-4 mt-2 text-center`}>
                         <ButtonLink to={'/auth/login'}>Voltar para Login</ButtonLink>
                     </div>

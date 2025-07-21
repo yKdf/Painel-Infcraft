@@ -32,7 +32,7 @@ export default ({
                     firstname,
                     lastname,
                     password,
-                    'g-recaptcha-response': recaptchaData,
+                    recaptchaData,
                 })
             )
             .then((response) => {
