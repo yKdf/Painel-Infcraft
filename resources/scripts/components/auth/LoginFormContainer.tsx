@@ -4,6 +4,7 @@ import styled from 'styled-components/macro';
 import { breakpoint } from '@/theme';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import tw from 'twin.macro';
+import Infcraftsvg from '@/assets/images/Infcraft.svg';
 
 type Props = React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> & {
     title?: string;
@@ -31,7 +32,7 @@ const Container = styled.div`
 export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => (
     <Container>
         <div css={tw`flex justify-center items-center`}>
-            <img src={'/assets/svgs/Infcraft.svg'} css={tw`w-64 md:w-80`} />
+            <img src={Infcraftsvg} css={tw`w-64 md:w-80`} />
         </div>
         {title && <h2 css={tw`text-3xl text-center text-neutral-100 font-normal py-4`}>{title}</h2>}
         <FlashMessageRender css={tw`mb-2 px-1`} />

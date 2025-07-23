@@ -26,6 +26,7 @@
                 <h3 class="box-title">System Information</h3>
             </div>
             <div class="box-body">
+                Painel 1
                 @if ($version->isLatestPanel())
                     You are running Pterodactyl Panel version <code>Infcraft {{ config('app.version') }}</code>. Your panel is up-to-date!
                 @else

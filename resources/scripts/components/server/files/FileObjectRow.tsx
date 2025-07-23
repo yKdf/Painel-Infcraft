@@ -103,10 +103,10 @@ const FileObjectRow = ({ file }: { file: FileObject }) => (
                 }}
             >
                 {getSource(file.name) === Source.Spigot && (
-                    <img src='/assets/plugininstaller/spigot.png' css={tw`h-8 w-8`}></img>
+                    <img src='/utils/plugininstaller/spigot.png' css={tw`h-8 w-8`}></img>
                 )}
                 {getSource(file.name) === Source.Modrinth && (
-                    <img src='/assets/plugininstaller/modrinth.png' css={tw`h-8 w-8`}></img>
+                    <img src='/utils/plugininstaller/modrinth.png' css={tw`h-8 w-8`}></img>
                 )}
             </button>
 

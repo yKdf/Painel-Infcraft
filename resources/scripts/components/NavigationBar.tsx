@@ -14,6 +14,7 @@ import Tooltip from '@/components/elements/tooltip/Tooltip';
 import Avatar from '@/components/Avatar';
 import ProgressBar from './elements/ProgressBar';
 import { breakpoint } from '@/theme';
+import Infcraftsvg from '@/assets/images/Infcraft.svg';
 
 const RightNavigation = styled.div`
     & > a,
@@ -61,7 +62,7 @@ export default () => {
             <div className={'mx-auto w-full flex items-center h-[3.5rem] max-w-[1200px]'}>
                 <div id={'logo'} className={'flex-1'}>
                     <Link to={'/'}>
-                        <img src={'/assets/svgs/Infcraft.svg'} css={tw`block h-[2.6rem]`} />
+                        <img src={Infcraftsvg} css={tw`block h-[2.6rem]`} />
                         {/* {name} */}
                     </Link>
                 </div>
