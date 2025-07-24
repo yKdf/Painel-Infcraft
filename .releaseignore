@@ -1,0 +1,18 @@
+# .releaseignore
+.env
+node_modules
+vendor
+storage/log/*
+storage/clockwork/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+.git
+.idea
+.vscode
+*.log
+*.sqlite
+*.gz
+!.gitignore
+.releaseignore

@@ -4,7 +4,6 @@
 !.env.example
 .env*
 .vagrant/*
-.releaseignore
 .vscode/*
 storage/framework/*
 /.idea
@@ -36,3 +35,6 @@ resources/lang/locales.js
 /public/build
 /public/hot
 result
+*.log
+*.sqlite
+*.gz
