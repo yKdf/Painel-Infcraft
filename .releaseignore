@@ -1,7 +1,7 @@
 # .releaseignore
 .env
-node_modules
-vendor
+/node_modules
+/vendor
 storage/log/*
 storage/clockwork/*
 storage/framework/cache/*

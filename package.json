@@ -140,7 +140,7 @@
         "watch": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --watch --progress",
         "build": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --progress",
         "build:production": "yarn run clean && cross-env NODE_ENV=production ./node_modules/.bin/webpack --mode production",
-        "serve": "yarn run clean && cross-env WEBPACK_PUBLIC_PATH=/webpack@hmr/ NODE_ENV=development webpack-dev-server --host 0.0.0.0 --port 8080 --public http://10.40.0.254 --hot"
+        "serve": "yarn run clean && cross-env WEBPACK_PUBLIC_PATH=/webpack@hmr/ NODE_ENV=development webpack-dev-server --host 0.0.0.0 --port 8080 --public http://localhost --hot"
     },
     "browserslist": [
         "> 0.5%",
