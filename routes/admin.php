@@ -241,7 +241,6 @@ Route::group(['prefix' => 'eggchanger'], function () {
 
     Route::post('/availables', [EggChangerController::class, 'availables'])->name('admin.eggchanger.availables');
     Route::post('/defaults', [EggChangerController::class, 'defaults'])->name('admin.eggchanger.defaults');
-	
 	Route::post('/{server_id}/availables', [EggChangerController::class, 'serverAvailables'])->name('admin.eggchanger.server.availables');
 });
 

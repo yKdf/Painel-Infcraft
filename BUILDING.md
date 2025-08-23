@@ -67,8 +67,8 @@ Estes arquivos são prontos para uso em produção.
 Para empacotar o painel para distribuição (excluindo arquivos desnecessários), utilize:
 
 ```bash
-find . -type d -exec chmod 755 {} \;
-find . -type f -exec chmod 644 {} \;
+sudo find . -type d -exec chmod 755 {} \;
+sudo find . -type f -exec chmod 644 {} \;
 
 tar --exclude-from=.releaseignore -czvf panel.tar.gz .
 ```
