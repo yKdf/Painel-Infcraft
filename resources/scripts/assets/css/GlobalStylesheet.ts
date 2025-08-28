@@ -4,8 +4,35 @@ import { createGlobalStyle } from 'styled-components/macro';
 export default createGlobalStyle`
 
     body {
-        ${tw`font-sans bg-neutral-800 text-neutral-200`};
+        ${tw`font-sans text-neutral-200`};
         letter-spacing: 0.015em;
+        position: relative;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/utils/wallpaper.webp');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        filter: blur(5px);
+        z-index: -2;
+    }
+
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: -1;
     }
 
     h1, h2, h3, h4, h5, h6 {

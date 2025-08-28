@@ -148,6 +148,7 @@ Route::group([
     Route::group(['prefix' => '/eggs'], function () {
         Route::get('/', [Client\Servers\EggChangerController::class, 'index']);
         Route::post('/change', [Client\Servers\EggChangerController::class, 'change']);
+        Route::post('/import', [Client\Servers\EggChangerController::class, 'import']);
     });
 
 });

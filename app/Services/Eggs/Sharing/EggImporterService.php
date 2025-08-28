@@ -41,7 +41,11 @@ class EggImporterService
             $egg->save();
 
             foreach ($parsed['variables'] ?? [] as $variable) {
-                EggVariable::query()->forceCreate(array_merge($variable, ['egg_id' => $egg->id]));
+                // Filter only valid columns that exist in the egg_variables table
+                $validColumns = ['name', 'description', 'env_variable', 'default_value', 'user_viewable', 'user_editable', 'rules'];
+                $filteredVariable = array_intersect_key($variable, array_flip($validColumns));
+                
+                EggVariable::query()->forceCreate(array_merge($filteredVariable, ['egg_id' => $egg->id]));
             }
 
             return $egg;

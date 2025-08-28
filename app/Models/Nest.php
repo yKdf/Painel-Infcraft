@@ -32,6 +32,8 @@ class Nest extends Model
      * Fields that are mass assignable.
      */
     protected $fillable = [
+        'uuid',
+        'author',
         'name',
         'description',
     ];

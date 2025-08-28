@@ -9,6 +9,7 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import getEggs from '@/api/server/eggs/getEggs';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import ChangeEggButton from '@/components/server/eggs/ChangeEggButton';
+import ImportEggButton from '@/components/server/eggs/ImportEggButton';
 
 export interface EggsResponse {
     eggs: any[];
@@ -42,6 +43,9 @@ export default () => {
                     </div>
                 ) : (
                     <>
+                        <div css={tw`w-full mb-4 flex justify-end`}>
+                            <ImportEggButton onChange={() => mutate()} />
+                        </div>
                         {data.eggs.length < 1 ? (
                             <p css={tw`text-center text-sm text-neutral-400 pt-4 pb-4`}>There are no selectable egg.</p>
                         ) : (
