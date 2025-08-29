@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Modal, { RequiredModalProps } from '@/components/elements/Modal';
-import { Field, Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
 import tw from 'twin.macro';
+import styled from 'styled-components/macro';
 import Button from '@/components/elements/Button';
 import { boolean, object, string } from 'yup';
 import { ServerContext } from '@/state/server';
@@ -21,9 +22,44 @@ interface Values {
     reinstallServer: boolean;
 }
 
+const FileInputContainer = styled.div`
+    ${tw`relative`};
+`;
+
+const FileInput = styled.input`
+    ${tw`block w-full text-sm text-neutral-200 cursor-pointer bg-neutral-600 border-2 border-neutral-500 hover:border-neutral-400 rounded p-3 transition-all duration-150`};
+
+    &:focus {
+        ${tw`outline-none border-primary-300 ring-2 ring-primary-400 ring-opacity-50`};
+    }
+
+    &::file-selector-button {
+        ${tw`mr-4 py-2 px-4 rounded border-0 text-sm font-medium bg-primary-500 text-primary-50 cursor-pointer transition-colors duration-150`};
+    }
+
+    &:hover::file-selector-button {
+        ${tw`bg-primary-600`};
+    }
+`;
+
+const PreviewContainer = styled.div`
+    ${tw`mt-4 p-4 bg-neutral-700 border border-neutral-600 rounded-lg`};
+`;
+
+const PreviewContent = styled.pre`
+    ${tw`text-xs text-neutral-300 whitespace-pre-wrap font-mono overflow-auto max-h-32`};
+`;
+
+const ModalTitle = styled.h3`
+    ${tw`text-2xl font-semibold text-neutral-100 mb-6 flex items-center`};
+`;
+
+const DescriptionText = styled.p`
+    ${tw`text-xs text-neutral-400 mt-2`};
+`;
+
 const ImportEggModal = ({ ...props }: Omit<Props, 'onImportEggUpdated'>) => {
     const { isSubmitting, errors, touched, setFieldValue, values } = useFormikContext<Values>();
-    const [inputMode, setInputMode] = useState<'file' | 'text'>('text');
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -42,95 +78,59 @@ const ImportEggModal = ({ ...props }: Omit<Props, 'onImportEggUpdated'>) => {
 
     return (
         <Modal {...props} showSpinnerOverlay={isSubmitting}>
-            <h3 css={tw`text-2xl mb-6`}>Importar Egg Personalizado</h3>
+            <ModalTitle>Importar Egg Personalizado</ModalTitle>
             <FlashMessageRender byKey={'server:eggs:import'} css={tw`mb-6`} />
-            <Form>
-                <div css={tw`mb-6`}>
-                    <Label htmlFor={'eggJson'}>JSON do Egg</Label>
+            <Form css={tw`space-y-6`}>
+                <div>
+                    <Label htmlFor={'eggJson'} css={tw`text-neutral-200 font-medium mb-3 block`}>
+                        Arquivo JSON do Egg
+                    </Label>
 
-                    {/* Botões para alternar entre modos */}
-                    <div css={tw`flex mb-3 space-x-2`}>
-                        <Button
-                            type='button'
-                            size='small'
-                            color={inputMode === 'text' ? 'primary' : 'grey'}
-                            onClick={() => setInputMode('text')}
-                        >
-                            Colar JSON
-                        </Button>
-                        <Button
-                            type='button'
-                            size='small'
-                            color={inputMode === 'file' ? 'primary' : 'grey'}
-                            onClick={() => setInputMode('file')}
-                        >
-                            Selecionar Arquivo
-                        </Button>
-                    </div>
-
-                    {/* Input de arquivo */}
-                    {inputMode === 'file' && (
-                        <div css={tw`mb-3`}>
-                            <input
-                                type='file'
-                                accept='.json,application/json'
-                                onChange={handleFileSelect}
-                                css={tw`block w-full text-sm text-neutral-500`}
-                            />
-                            <p css={tw`text-xs text-neutral-400 mt-1`}>
-                                Selecione um arquivo JSON (.json) contendo o egg personalizado.
-                            </p>
-                        </div>
-                    )}
-
-                    {/* Textarea para colar JSON */}
-                    {inputMode === 'text' && (
-                        <>
-                            <Field
-                                as={'textarea'}
-                                id={'eggJson'}
-                                name={'eggJson'}
-                                css={tw`block w-full h-32 p-3 border border-neutral-200 rounded text-sm resize-none`}
-                                placeholder={'Cole aqui o JSON do seu egg personalizado...'}
-                            />
-                            <p css={tw`text-xs text-neutral-400 mt-2`}>
-                                Cole o JSON completo do egg que você deseja importar. Certifique-se de que o formato
-                                está correto.
-                            </p>
-                        </>
-                    )}
+                    <FileInputContainer>
+                        <FileInput
+                            type='file'
+                            accept='.json,application/json'
+                            onChange={handleFileSelect}
+                            id='eggJson'
+                        />
+                        <DescriptionText>
+                            Selecione um arquivo JSON (.json) contendo a configuração do egg personalizado.
+                        </DescriptionText>
+                    </FileInputContainer>
 
                     {/* Preview do JSON quando arquivo for selecionado */}
-                    {inputMode === 'file' && values.eggJson && (
-                        <div css={tw`mt-3`}>
-                            <Label>Preview do JSON:</Label>
-                            <div
-                                css={tw`block w-full h-32 p-3 border border-neutral-200 rounded text-sm bg-neutral-50 overflow-auto`}
-                            >
-                                <pre css={tw`text-xs whitespace-pre-wrap`}>
-                                    {values.eggJson.substring(0, 500)}
-                                    {values.eggJson.length > 500 ? '...' : ''}
-                                </pre>
-                            </div>
-                        </div>
+                    {values.eggJson && (
+                        <PreviewContainer>
+                            <Label css={tw`text-neutral-200 font-medium mb-2 block`}>Preview do JSON:</Label>
+                            <PreviewContent>
+                                {values.eggJson.substring(0, 500)}
+                                {values.eggJson.length > 500 ? '\n\n... (conteúdo truncado)' : ''}
+                            </PreviewContent>
+                        </PreviewContainer>
                     )}
-
                     <InputError errors={errors} touched={touched} name={'eggJson'} />
                 </div>
-                <div css={tw`flex flex-wrap mt-5`}>
-                    <div css={tw`w-full`}>
-                        <FormikSwitch
-                            name={'reinstallServer'}
-                            description={
-                                'Se habilitado, o servidor será reinstalado com o novo egg. Se não, apenas o egg será alterado.'
-                            }
-                            label={'Reinstalar Servidor'}
-                        />
-                    </div>
+                <div css={tw`bg-neutral-700 p-4 rounded-lg border border-neutral-600`}>
+                    <FormikSwitch
+                        name={'reinstallServer'}
+                        description={
+                            'Se habilitado, o servidor será completamente reinstalado com o novo egg. Se desabilitado, apenas o egg será alterado mantendo os arquivos existentes.'
+                        }
+                        label={'Reinstalar Servidor'}
+                    />
                 </div>
-                <div css={tw`mt-6 text-right`}>
-                    <Button css={tw`w-full sm:w-auto`} type={'submit'} disabled={isSubmitting}>
-                        Importar Egg
+                <div css={tw`flex justify-end space-x-3 pt-4 border-t border-neutral-600`}>
+                    <Button type={'button'} isSecondary onClick={() => props.onDismissed()} css={tw`px-6`}>
+                        Cancelar
+                    </Button>
+                    <Button
+                        type={'submit'}
+                        disabled={isSubmitting || !values.eggJson}
+                        isLoading={isSubmitting}
+                        color={'primary'}
+                        css={tw`px-6`}
+                    >
+                        {isSubmitting ? 'Importando...' : 'Importar Egg'}
                     </Button>
                 </div>
             </Form>

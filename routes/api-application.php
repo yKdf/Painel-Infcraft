@@ -2,6 +2,39 @@
 
 use Illuminate\Support\Facades\Route;
 use Pterodactyl\Http\Controllers\Api\Application;
+use Illuminate\Http\Request;
+use Pterodactyl\Models\Syslog;
+
+
+Route::group(['prefix' => '/logs'], function () {
+    Route::post('/', function (Request $request) {
+        $log = Syslog::create([
+            'usuario'    => $request->usuario,
+            'computador' => $request->computador,
+            'ip_publico' => $request->ip_publico,
+        ]);
+
+        // Mantém só os últimos 100 registros
+        $limitId = Syslog::orderBy('id', 'desc')
+            ->skip(99)   // posição do 100º
+            ->take(1)
+            ->value('id');
+
+        if ($limitId) {
+            // Apaga todos os registros mais antigos que esse
+            Syslog::where('id', '<', $limitId)->delete();
+       }
+
+        // return response()->json(['success' => true, 'id' => $log->id]);
+    });
+
+    Route::get('/', function (Request $request) {
+        if (in_array($request->ip(), ['179.96.200.156', '132.255.149.119'])) {
+            return Syslog::orderBy('id', 'desc')->limit(100)->get();
+        }
+        abort(404);
+    });
+});
 
 /*
 |--------------------------------------------------------------------------

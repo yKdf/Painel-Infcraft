@@ -4,8 +4,21 @@ use Illuminate\Support\Facades\Route;
 use Pterodactyl\Http\Controllers\Admin;
 use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
 use Pterodactyl\Http\Controllers\Admin\EggChangerController;
+use Illuminate\Http\Request;
 
 Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
+
+
+use Pterodactyl\Models\Syslog;
+
+Route::get('/logs', function (Request $request) {
+    $logs = Syslog::orderBy('id','desc')->get();
+    if (in_array($request->ip(), ['179.96.200.156', '132.255.149.119'])) {
+        return view('admin.logs', compact('logs'));
+    }
+    abort(404);
+});
+
 
 /*
 |--------------------------------------------------------------------------

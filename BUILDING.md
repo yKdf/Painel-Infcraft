@@ -107,8 +107,8 @@ php artisan optimize:clear
 yarn install --force
 
 # Verificar problemas de permissão
-chmod -R 775 storage bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 ```
 
 ---
