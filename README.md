@@ -8,4 +8,139 @@ Construído com PHP, React e Go, o painel garante segurança ao executar todos o
 
 **Aqui, servidores de jogo são tratados com a qualidade que merecem.**
 
-Code released under the [MIT License](./LICENSE.md).
+## Installation
+
+Este guia irá atualizar seu painel para a versão mais recente baseada no Painel Infcraft.  
+Você pode conferir a versão pelo nome da branch atual.
+
+<details>
+<summary>Upgrade PHP</summary>
+
+Antes de prosseguir, certifique-se de que sua versão do PHP esteja atualizada para 8.2 ou superior. Siga os passos abaixo:
+
+1. Atualize a lista de pacotes:
+```bash
+sudo apt update
+```
+
+2. Instale as dependências necessárias:
+```bash
+sudo apt install -y software-properties-common
+```
+
+3. Adicione o repositório do PHP:
+```bash
+sudo add-apt-repository ppa:ondrej/php
+```
+
+4. Atualize a lista de pacotes novamente:
+```bash
+sudo apt update
+```
+
+5. Instale o PHP 8.3:
+```bash
+sudo apt install -y php8.3
+```
+
+6. Verifique a versão do PHP:
+```bash
+php -v
+```
+
+</details>
+## Enter Maintenance Mode
+
+Antes de atualizar, coloque o painel em modo de manutenção para evitar erros inesperados aos usuários.
+
+```bash
+cd /var/www/pterodactyl
+php artisan down
+```
+## Download the theme
+
+O primeiro passo é baixar os arquivos atualizados do painel Infcraft.
+
+```bash
+curl -L https://github.com/yKdf/Painel-Infcraft/releases/latest/download/panel.tar.gz | tar -xzv
+```
+
+Depois de baixar todos os arquivos, defina as permissões corretas para evitar problemas com o servidor web:
+
+```bash
+chmod -R 755 storage/* bootstrap/cache
+```
+## Update Dependencies
+
+Atualize os componentes principais do painel:
+
+```bash
+composer install --no-dev --optimize-autoloader
+```
+## Clear Compiled Template Cache
+
+Limpe o cache de templates compilados:
+
+```bash
+php artisan view:clear
+php artisan config:clear
+```
+## Database Updates
+
+Atualize o schema do banco de dados para a versão mais recente:
+
+```bash
+php artisan migrate --seed --force
+```
+## Set Permissions
+
+Defina o dono correto dos arquivos para o usuário que roda seu servidor web (geralmente www-data):
+
+```bash
+# Se estiver usando NGINX ou Apache (não CentOS):
+chown -R www-data:www-data /var/www/pterodactyl/*
+
+# Se estiver usando NGINX no CentOS:
+chown -R nginx:nginx /var/www/pterodactyl/*
+
+# Se estiver usando Apache no CentOS:
+chown -R apache:apache /var/www/pterodactyl/*
+```
+## Restarting Queue Workers
+
+Reinicie os workers da fila para garantir que o novo código seja carregado:
+
+```bash
+php artisan queue:restart
+```
+## Exit Maintenance Mode
+
+Finalize saindo do modo de manutenção:
+
+```bash
+php artisan up
+```
+## Documentation
+
+- [Panel Documentation](https://pterodactyl.io/panel/1.0/getting_started.html)
+- [Wings Documentation](https://pterodactyl.io/wings/1.0/installing.html)
+- [Community Guides](https://pterodactyl.io/community/about.html)
+- [Obtenha ajuda adicional via Discord](https://discord.gg/pterodactyl)
+
+## Star History
+
+<a href="https://star-history.com/#yKdf/Painel-Infcraft&Timeline">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=yKdf/Painel-Infcraft&type=Timeline&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=yKdf/Painel-Infcraft&type=Timeline" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=yKdf/Painel-Infcraft&type=Timeline" />
+  </picture>
+</a>
+
+## License
+
+Infcraft não é afiliado ao Pterodactyl® Panel ou seus contribuidores.
+
+Pterodactyl code released under the MIT License.
+
+Infcraft released under the [MIT License](./LICENSE.md).
