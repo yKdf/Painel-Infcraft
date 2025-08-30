@@ -57,7 +57,7 @@ Antes de atualizar, coloque o painel em modo de manutenção para evitar erros i
 cd /var/www/pterodactyl
 php artisan down
 ```
-## Download the theme
+## Download the panel
 
 O primeiro passo é baixar os arquivos atualizados do painel Infcraft.
 
