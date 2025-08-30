@@ -31,7 +31,7 @@ jobs:
         env:
           REF: ${{ github.ref }}
         run: |
-          BRANCH="${REF:10}"
+          BRANCH="release/${REF:10}"
           git config --local user.email 'gabe.debortoli@gmail.com'
           git config --local user.name 'yKdf'
           git checkout -b "$BRANCH"
