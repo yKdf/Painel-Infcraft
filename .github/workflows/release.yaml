@@ -10,7 +10,7 @@ jobs:
     name: Release
     runs-on: self-hosted
     permissions:
-      contents: write # write is required to create releases and push.
+      contents: write # write is required to create releases and push..
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
