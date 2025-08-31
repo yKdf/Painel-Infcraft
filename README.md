@@ -54,7 +54,7 @@ php -v
 Antes de atualizar, coloque o painel em modo de manutenção para evitar erros inesperados aos usuários.
 
 ```bash
-cd /var/www/pterodactyl
+cd /var/www/painel-infcraft
 php artisan down
 ```
 ## Download the panel
@@ -98,13 +98,13 @@ Defina o dono correto dos arquivos para o usuário que roda seu servidor web (ge
 
 ```bash
 # Se estiver usando NGINX ou Apache (não CentOS):
-chown -R www-data:www-data /var/www/pterodactyl/*
+chown -R www-data:www-data /var/www/painel-infcraft/*
 
 # Se estiver usando NGINX no CentOS:
-chown -R nginx:nginx /var/www/pterodactyl/*
+chown -R nginx:nginx /var/www/painel-infcraft/*
 
 # Se estiver usando Apache no CentOS:
-chown -R apache:apache /var/www/pterodactyl/*
+chown -R apache:apache /var/www/painel-infcraft/*
 ```
 ## Restarting Queue Workers
 
