@@ -49,6 +49,7 @@ php -v
 ```
 
 </details>
+
 ## Enter Maintenance Mode
 
 Antes de atualizar, coloque o painel em modo de manutenção para evitar erros inesperados aos usuários.
