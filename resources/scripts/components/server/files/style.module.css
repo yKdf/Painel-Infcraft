@@ -26,3 +26,38 @@
         }
     }
 }
+
+.file_grid {
+    @apply relative bg-gray-800 rounded-lg p-4 hover:bg-neutral-600 transition-colors duration-150 flex flex-col items-center text-center min-h-[120px] justify-between;
+}
+
+.file_name_container {
+    @apply text-sm text-neutral-100 px-2 overflow-hidden text-center w-full max-w-[140px] mx-auto;
+}
+
+.file_name_long {
+    display: inline-block;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.file_grid:hover .file_name_container .file_name_long {
+    animation: scrollText 6s linear infinite;
+}
+
+@keyframes scrollText {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.file_name_short {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+}

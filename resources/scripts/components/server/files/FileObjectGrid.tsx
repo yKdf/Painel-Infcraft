@@ -69,7 +69,7 @@ const open = (filename: string) => {
 
 const FileObjectGrid = ({ file }: { file: FileObject }) => (
     <div
-        css={tw`relative bg-gray-800 rounded-lg p-4 hover:bg-neutral-600 transition-colors duration-150 flex flex-col items-center text-center min-h-[120px] justify-between`}
+        className={styles.file_grid}
         key={file.name}
         onContextMenu={(e) => {
             e.preventDefault();
@@ -94,33 +94,8 @@ const FileObjectGrid = ({ file }: { file: FileObject }) => (
                     )}
                 </div>
 
-                <div css={tw`text-sm text-neutral-100 px-2 overflow-hidden text-center w-full max-w-[140px] mx-auto`}>
-                    <div
-                        css={[
-                            file.name.length > 20
-                                ? {
-                                      display: 'inline-block',
-                                      whiteSpace: 'nowrap',
-                                      width: '100%',
-                                      animation: 'scrollText 4s linear infinite',
-                                      '@keyframes scrollText': {
-                                          '0%': {
-                                              transform: 'translateX(100%)',
-                                          },
-                                          '100%': {
-                                              transform: 'translateX(-100%)',
-                                          },
-                                      },
-                                  }
-                                : {
-                                      display: 'block',
-                                      whiteSpace: 'nowrap',
-                                      textOverflow: 'ellipsis',
-                                      overflow: 'hidden',
-                                      width: '100%',
-                                  },
-                        ]}
-                    >
+                <div className={styles.file_name_container}>
+                    <div className={file.name.length > 20 ? styles.file_name_long : styles.file_name_short}>
                         {file.name}
                     </div>
                 </div>
