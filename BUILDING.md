@@ -108,7 +108,7 @@ yarn install --force
 
 # Verificar problemas de permissão
 chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+chmod -R 777 storage bootstrap/cache
 ```
 
 ---

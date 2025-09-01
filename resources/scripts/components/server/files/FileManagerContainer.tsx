@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { httpErrorToHuman } from '@/api/http';
 import { CSSTransition } from 'react-transition-group';
 import Spinner from '@/components/elements/Spinner';
 import FileObjectRow from '@/components/server/files/FileObjectRow';
+import FileObjectGrid from '@/components/server/files/FileObjectGrid';
 import FileManagerBreadcrumbs from '@/components/server/files/FileManagerBreadcrumbs';
 import { FileObject } from '@/api/server/files/loadDirectory';
 import NewDirectoryButton from '@/components/server/files/NewDirectoryButton';
+import ViewToggleButton from '@/components/server/files/ViewToggleButton';
 import { NavLink, useLocation } from 'react-router-dom';
 import Can from '@/components/elements/Can';
 import { ServerError } from '@/components/elements/ScreenBlock';
@@ -37,6 +39,10 @@ export default () => {
     const directory = ServerContext.useStoreState((state) => state.files.directory);
     const clearFlashes = useStoreActions((actions) => actions.flashes.clearFlashes);
     const setDirectory = ServerContext.useStoreActions((actions) => actions.files.setDirectory);
+    const [isGridView, setIsGridView] = useState(() => {
+        const saved = localStorage.getItem('fileManager:viewMode');
+        return saved ? JSON.parse(saved) : false;
+    });
 
     const setSelectedFiles = ServerContext.useStoreActions((actions) => actions.files.setSelectedFiles);
     const selectedFilesLength = ServerContext.useStoreState((state) => state.files.selectedFiles.length);
@@ -76,6 +82,14 @@ export default () => {
                     <Can action={'file.create'}>
                         <div className={style.manager_actions}>
                             <FileManagerStatus />
+                            <ViewToggleButton
+                                isGridView={isGridView}
+                                onToggle={() => {
+                                    const newView = !isGridView;
+                                    setIsGridView(newView);
+                                    localStorage.setItem('fileManager:viewMode', JSON.stringify(newView));
+                                }}
+                            />
                             <NewDirectoryButton />
                             <UploadButton />
                             <NavLink to={`/server/${id}/files/new${window.location.hash}`}>
@@ -102,9 +116,19 @@ export default () => {
                                         </p>
                                     </div>
                                 )}
-                                {sortFiles(files.slice(0, 250)).map((file) => (
-                                    <FileObjectRow key={file.key} file={file} />
-                                ))}
+                                {isGridView ? (
+                                    <div css={tw`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1`}>
+                                        {sortFiles(files.slice(0, 250)).map((file) => (
+                                            <FileObjectGrid key={file.key} file={file} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div>
+                                        {sortFiles(files.slice(0, 250)).map((file) => (
+                                            <FileObjectRow key={file.key} file={file} />
+                                        ))}
+                                    </div>
+                                )}
                                 <MassActionsBar />
                             </div>
                         </CSSTransition>
