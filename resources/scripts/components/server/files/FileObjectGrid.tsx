@@ -36,14 +36,9 @@ const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
     }
 
     return !canReadContents || (file.isFile && !file.isEditable()) ? (
-        <div title={generateTitle()} className={styles.details}>
-            {children}
-        </div>
+        <div title={generateTitle()}>{children}</div>
     ) : (
-        <NavLink
-            className={styles.details}
-            to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments(join(directory, file.name))}`}
-        >
+        <NavLink to={`${match.url}${file.isFile ? '/edit' : ''}#${encodePathSegments(join(directory, file.name))}`}>
             {children}
         </NavLink>
     );
@@ -88,7 +83,7 @@ const FileObjectGrid = ({ file }: { file: FileObject }) => (
         </div>
 
         <Clickable file={file}>
-            <div css={tw`flex flex-col items-center space-y-2 w-full`}>
+            <div css={tw`flex flex-col items-center space-y-2`}>
                 <div css={tw`text-neutral-400 text-3xl`}>
                     {file.isFile ? (
                         <FontAwesomeIcon
@@ -99,8 +94,35 @@ const FileObjectGrid = ({ file }: { file: FileObject }) => (
                     )}
                 </div>
 
-                <div css={tw`text-sm text-neutral-100 truncate w-full px-2`} title={file.name}>
-                    {file.name}
+                <div css={tw`text-sm text-neutral-100 px-2 overflow-hidden text-center w-full max-w-[140px] mx-auto`}>
+                    <div
+                        css={[
+                            file.name.length > 20
+                                ? {
+                                      display: 'inline-block',
+                                      whiteSpace: 'nowrap',
+                                      width: '100%',
+                                      animation: 'scrollText 4s linear infinite',
+                                      '@keyframes scrollText': {
+                                          '0%': {
+                                              transform: 'translateX(100%)',
+                                          },
+                                          '100%': {
+                                              transform: 'translateX(-100%)',
+                                          },
+                                      },
+                                  }
+                                : {
+                                      display: 'block',
+                                      whiteSpace: 'nowrap',
+                                      textOverflow: 'ellipsis',
+                                      overflow: 'hidden',
+                                      width: '100%',
+                                  },
+                        ]}
+                    >
+                        {file.name}
+                    </div>
                 </div>
 
                 {file.isFile && <div className={styles.size}>{bytesToString(file.size)}</div>}
