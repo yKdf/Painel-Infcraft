@@ -1,0 +1,97 @@
+.persistent-search-bar {
+    display: flex;
+    align-items: center;
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    gap: 8px;
+    font-size: 14px;
+    color: #e2e8f0;
+}
+
+.persistent-search-input {
+    flex: 1;
+    background: #1a202c;
+    border: 1px solid #4a5568;
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: #e2e8f0;
+    font-size: 13px;
+    outline: none;
+}
+
+.persistent-search-input:focus {
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 1px #63b3ed;
+}
+
+.search-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-button {
+    background: #4a5568;
+    border: 1px solid #718096;
+    border-radius: 3px;
+    color: #e2e8f0;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.2s;
+}
+
+.search-button:hover {
+    background: #718096;
+}
+
+.search-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.search-info {
+    font-size: 12px;
+    color: #a0aec0;
+    min-width: 60px;
+    text-align: center;
+}
+
+.search-close {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 2px;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.search-close:hover {
+    color: #e2e8f0;
+}
+
+/* CodeMirror search match styles */
+.CodeMirror-search-match {
+    background: rgba(255, 255, 0, 0.3);
+    border: 1px solid rgba(255, 255, 0, 0.6);
+}
+
+.CodeMirror-search-match-selected {
+    background: rgba(255, 165, 0, 0.5);
+    border: 1px solid rgba(255, 165, 0, 0.8);
+}
+
+/* Dark theme adjustments */
+.cm-s-material-darker .CodeMirror-search-match {
+    background: rgba(255, 255, 0, 0.2);
+    border: 1px solid rgba(255, 255, 0, 0.4);
+}
+
+.cm-s-material-darker .CodeMirror-search-match-selected {
+    background: rgba(255, 165, 0, 0.3);
+    border: 1px solid rgba(255, 165, 0, 0.6);
+}

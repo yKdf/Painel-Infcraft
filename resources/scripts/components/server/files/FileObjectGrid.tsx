@@ -95,7 +95,7 @@ const FileObjectGrid = ({ file }: { file: FileObject }) => (
                 </div>
 
                 <div className={styles.file_name_container}>
-                    <div className={file.name.length > 20 ? styles.file_name_long : styles.file_name_short}>
+                    <div className={file.name.length > 16 ? styles.file_name_long : styles.file_name_short}>
                         {file.name}
                     </div>
                 </div>
