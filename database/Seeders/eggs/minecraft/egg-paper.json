@@ -8,6 +8,7 @@
     "name": "Paper",
     "author": "parker@pterodactyl.io",
     "description": "High performance Spigot fork that aims to fix gameplay and mechanics inconsistencies.",
+    "thumbnail": "https://painel.infcraft.net/utils/banners/paper.svg",
     "features": [
         "eula",
         "java_version",

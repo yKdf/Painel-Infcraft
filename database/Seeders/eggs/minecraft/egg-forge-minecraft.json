@@ -8,6 +8,7 @@
     "name": "Forge Minecraft",
     "author": "support@pterodactyl.io",
     "description": "Minecraft Forge Server. Minecraft Forge is a modding API (Application Programming Interface), which makes it easier to create mods, and also make sure mods are compatible with each other.",
+    "thumbnail": "https://painel.infcraft.net/utils/banners/forge.svg",
     "features": [
         "eula",
         "java_version",
