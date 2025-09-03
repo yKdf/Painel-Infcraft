@@ -72,7 +72,17 @@ class EggSeeder extends Seeder
                 ->first();
 
             if ($egg instanceof Egg) {
+                // Preservar thumbnail customizado se existir
+                $originalThumbnail = $egg->thumbnail;
+                
                 $this->updateImporterService->handle($egg, $file);
+                
+                // Restaurar thumbnail customizado se foi removido durante a atualização
+                if (!empty($originalThumbnail) && empty($egg->fresh()->thumbnail)) {
+                    $egg->thumbnail = $originalThumbnail;
+                    $egg->save();
+                }
+                
                 $this->command->info('Updated ' . $decoded['name']);
             } else {
                 $this->importerService->handle($file, $nest->id);
