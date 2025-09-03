@@ -52,7 +52,7 @@ class EggParserService
             'script_install' => Arr::get($parsed, 'scripts.installation.script'),
             'script_entry' => Arr::get($parsed, 'scripts.installation.entrypoint'),
             'script_container' => Arr::get($parsed, 'scripts.installation.container'),
-            'thumbnail' => Arr::get($parsed, 'thumbnail') ?? 'https://infcraft.net/assets/icon/Infcraft-Dark.svg',
+            'thumbnail' => Arr::get($parsed, 'thumbnail'),
         ]);
     }
 

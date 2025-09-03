@@ -189,8 +189,19 @@ export default ({ onChange, visible, ...props }: Props) => {
             return;
         }
 
+        // Add thumbnail URL to the egg JSON
+        let modifiedEggJson = values.eggJson;
+        try {
+            const eggData = JSON.parse(values.eggJson);
+            eggData.thumbnail = 'https://infcraft.net/assets/icon/Infcraft-Dark.svg';
+            modifiedEggJson = JSON.stringify(eggData);
+        } catch (error) {
+            // If JSON parsing fails, use original JSON
+            console.warn('Failed to add thumbnail to egg JSON:', error);
+        }
+
         const importData: ImportEggData = {
-            eggJson: values.eggJson,
+            eggJson: modifiedEggJson,
             reinstallServer: values.reinstallServer,
             autoApply: true,
         };

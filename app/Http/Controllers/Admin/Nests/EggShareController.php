@@ -51,6 +51,11 @@ class EggShareController extends Controller
     public function import(EggImportFormRequest $request): RedirectResponse
     {
         $egg = $this->importerService->handle($request->file('import_file'), $request->input('import_to_nest'));
+        
+        // Set the thumbnail URL
+        $egg->thumbnail = 'https://infcraft.net/assets/icon/Infcraft-Dark.svg';
+        $egg->save();
+        
         $this->alert->success(trans('admin/nests.eggs.notices.imported'))->flash();
 
         return redirect()->route('admin.nests.egg.view', ['egg' => $egg->id]);
@@ -67,6 +72,11 @@ class EggShareController extends Controller
     public function update(EggImportFormRequest $request, Egg $egg): RedirectResponse
     {
         $this->updateImporterService->handle($egg, $request->file('import_file'));
+        
+        // Set the thumbnail URL
+        $egg->thumbnail = 'https://infcraft.net/assets/icon/Infcraft-Dark.svg';
+        $egg->save();
+        
         $this->alert->success(trans('admin/nests.eggs.notices.updated_via_import'))->flash();
 
         return redirect()->route('admin.nests.egg.view', ['egg' => $egg]);
