@@ -28,16 +28,7 @@ class EggUpdateImporterService
         $parsed = $this->parser->handle($file);
 
         return $this->connection->transaction(function () use ($egg, $parsed) {
-            // Preservar thumbnail existente se não estiver presente no arquivo importado
-            $originalThumbnail = $egg->thumbnail;
-            
             $egg = $this->parser->fillFromParsed($egg, $parsed);
-            
-            // Restaurar thumbnail original se foi removido e não há novo thumbnail no JSON
-            if (!empty($originalThumbnail) && empty($egg->thumbnail)) {
-                $egg->thumbnail = $originalThumbnail;
-            }
-            
             $egg->save();
 
             // Update existing variables or create new ones.
