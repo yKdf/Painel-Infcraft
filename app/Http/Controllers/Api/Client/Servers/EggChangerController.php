@@ -121,12 +121,6 @@ class EggChangerController extends ClientApiController
         // Clean up imported eggs AFTER the egg change is complete
         // This prevents foreign key constraint errors
         if ($importedNest && $currentEgg && $currentEgg->nest_id == $importedNest->id) {
-            Log::info('Cleaning up imported eggs after successful egg change', [
-                'server_id' => $server->id,
-                'old_egg_id' => $currentEgg->id,
-                'new_egg_id' => $newEgg->id,
-                'imported_nest_id' => $importedNest->id,
-            ]);
             
             $this->cleanupPreviousImportedEggs($server, $importedNest->id);
         }
@@ -214,20 +208,10 @@ class EggChangerController extends ClientApiController
             ];
 
             // Apply the egg automatically
-            Log::info('Starting automatic egg application', [
-                'server_id' => $server->id,
-                'egg_id' => $egg->id,
-                'egg_name' => $egg->name,
-            ]);
             
             try {
                 // Create a new request for the change method
                 $changeRequest = new Request([
-                    'eggId' => $egg->id,
-                    'reinstallServer' => $request->input('reinstallServer', false),
-                ]);
-                
-                Log::info('Created change request', [
                     'eggId' => $egg->id,
                     'reinstallServer' => $request->input('reinstallServer', false),
                 ]);
@@ -257,13 +241,6 @@ class EggChangerController extends ClientApiController
 
                 $dockerImages = json_decode($eggData[0]->docker_images, true);
 
-                Log::info('About to apply egg to server', [
-                    'server_id' => $server->id,
-                    'egg_id' => $eggData[0]->id,
-                    'nest_id' => $eggData[0]->nest_id,
-                    'docker_image' => reset($dockerImages),
-                ]);
-
                 $this->startupModificationService->setUserLevel(User::USER_LEVEL_ADMIN);
 
                 $this->startupModificationService->handle($server, [
@@ -273,23 +250,11 @@ class EggChangerController extends ClientApiController
                     'environment' => [], // Empty environment variables for now
                 ]);
 
-                Log::info('Egg applied successfully to server', [
-                    'server_id' => $server->id,
-                    'egg_id' => $eggData[0]->id,
-                ]);
-
                 // Clean up previously imported eggs after successful application
-                Log::info('Cleaning up imported eggs after successful egg application', [
-                    'server_id' => $server->id,
-                    'new_egg_id' => $eggData[0]->id,
-                    'imported_nest_id' => $importedNest->id,
-                ]);
                 $this->cleanupPreviousImportedEggs($server, $importedNest->id);
 
                 if ($reinstallServer) {
-                    Log::info('Starting server reinstall', ['server_id' => $server->id]);
                     $this->reinstallServerService->handle($server);
-                    Log::info('Server reinstall completed', ['server_id' => $server->id]);
                 }
 
                 $response['data']['message'] = 'Egg imported and applied successfully.';
@@ -378,10 +343,6 @@ class EggChangerController extends ClientApiController
                             // Delete the egg itself
                             $this->eggRepository->delete($eggId);
                             
-                            Log::info('Completely deleted imported egg globally', [
-                                'server_id' => $server->id,
-                                'egg_id' => $eggId,
-                            ]);
                         } else {
                             // Other servers are using this egg or have it available, only remove from this server's available eggs
                             DB::table('available_eggs')
@@ -389,12 +350,6 @@ class EggChangerController extends ClientApiController
                                 ->where('server_id', $server->id)
                                 ->delete();
                             
-                            Log::info('Removed imported egg from server only (other servers using it)', [
-                                'server_id' => $server->id,
-                                'egg_id' => $eggId,
-                                'other_servers_count' => $otherServersCount,
-                                'other_servers_with_egg' => $otherServersWithEgg,
-                            ]);
                         }
                     } catch (\Throwable $eggError) {
                         Log::warning('Failed to delete individual imported egg', [
@@ -405,10 +360,6 @@ class EggChangerController extends ClientApiController
                     }
                 }
                 
-                Log::info('Cleaned up previously imported eggs', [
-                    'server_id' => $server->id,
-                    'deleted_eggs' => $importedEggs,
-                ]);
                 
                 // Check if the "Imported Eggs" nest is now empty and remove it if so
                 $remainingEggsInNest = DB::table('eggs')
@@ -420,10 +371,6 @@ class EggChangerController extends ClientApiController
                         // Remove the empty nest
                         DB::table('nests')->where('id', $importedNestId)->delete();
                         
-                        Log::info('Removed empty "Imported Eggs" nest', [
-                            'server_id' => $server->id,
-                            'nest_id' => $importedNestId,
-                        ]);
                     } catch (\Throwable $nestError) {
                         Log::warning('Failed to delete empty imported nest', [
                             'server_id' => $server->id,

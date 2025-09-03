@@ -71,6 +71,10 @@ sudo find . -type d -exec chmod 755 {} \;
 sudo find . -type f -exec chmod 644 {} \;
 
 tar --exclude-from=.releaseignore -czvf panel.tar.gz .
+
+git tag v1.x.x
+
+git push origin v1.x.x
 ```
 
 ---
