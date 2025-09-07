@@ -28,10 +28,20 @@ class StoreUserRequest extends ApplicationApiRequest
             'root_admin',
         ])->toArray();
 
-        // Tornar first_name e last_name opcionais
-        $response['username'] = 'sometimes|' . implode('|', $rules['username']);
+        // Adicionar first_name e last_name como campos permitidos
         $response['first_name'] = 'sometimes|' . implode('|', $rules['name_first']);
         $response['last_name'] = 'sometimes|' . implode('|', $rules['name_last']);
+
+        // Tornar username opcional
+        $usernameRules = [];
+        foreach ($rules['username'] as $rule) {
+            if (is_object($rule)) {
+                $usernameRules[] = $rule;
+            } else {
+                $usernameRules[] = $rule;
+            }
+        }
+        $response['username'] = array_merge(['sometimes'], $usernameRules);
 
         return $response;
     }
