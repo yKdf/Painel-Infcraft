@@ -28,8 +28,10 @@ class StoreUserRequest extends ApplicationApiRequest
             'root_admin',
         ])->toArray();
 
-        $response['first_name'] = $rules['name_first'];
-        $response['last_name'] = $rules['name_last'];
+        // Tornar first_name e last_name opcionais
+        $response['username'] = 'sometimes|' . implode('|', $rules['username']);
+        $response['first_name'] = 'sometimes|' . implode('|', $rules['name_first']);
+        $response['last_name'] = 'sometimes|' . implode('|', $rules['name_last']);
 
         return $response;
     }
@@ -38,10 +40,16 @@ class StoreUserRequest extends ApplicationApiRequest
     {
         $data = parent::validated();
 
-        $data['name_first'] = $data['first_name'];
-        $data['name_last'] = $data['last_name'];
+        // Só mapear se os campos estiverem presentes
+        if (isset($data['first_name'])) {
+            $data['name_first'] = $data['first_name'];
+            unset($data['first_name']);
+        }
 
-        unset($data['first_name'], $data['last_name']);
+        if (isset($data['last_name'])) {
+            $data['name_last'] = $data['last_name'];
+            unset($data['last_name']);
+        }
 
         return $data;
     }

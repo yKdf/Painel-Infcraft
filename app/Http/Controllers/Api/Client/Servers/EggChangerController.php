@@ -141,6 +141,11 @@ class EggChangerController extends ClientApiController
      */
     public function import(Request $request, Server $server)
     {
+        // Verificar se o usuário é administrador
+        if (!$request->user()->root_admin) {
+            throw new DisplayException('Apenas administradores podem importar eggs.');
+        }
+
         $this->validate($request, [
             'json_data' => 'required|string',
             'autoApply' => 'boolean',

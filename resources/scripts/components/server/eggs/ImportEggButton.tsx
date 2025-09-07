@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import ImportEggModal from '@/components/server/eggs/ImportEggModal';
 import tw from 'twin.macro';
 import Button from '@/components/elements/Button';
+import { useStoreState } from 'easy-peasy';
+import { ApplicationStore } from '@/state';
 
 interface Props {
     onChange: () => void;
@@ -9,6 +11,12 @@ interface Props {
 
 export default ({ onChange }: Props) => {
     const [visible, setVisible] = useState(false);
+    const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
+
+    // Apenas administradores podem ver o botão de importação
+    if (!rootAdmin) {
+        return null;
+    }
 
     return (
         <>
