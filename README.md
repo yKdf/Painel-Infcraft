@@ -1,4 +1,4 @@
-[![Logo Image](https://infcraft.net/assets/icon/Infcraft.svg)](https://infcraft.net)
+[![Logo Image](https://cdn.infcraft.net/file/icon/Infcraft.svg)](https://infcraft.net)
 
 # Painel Infcraft
 
