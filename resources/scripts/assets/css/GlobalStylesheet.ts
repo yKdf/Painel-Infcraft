@@ -16,7 +16,7 @@ export default createGlobalStyle`
         left: 0;
         width: 100%;
         height: 100%;
-        background-image: url('/utils/wallpaper.webp');
+        background-image: url('https://cdn.infcraft.net/file/painel/wallpaper.webp');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
