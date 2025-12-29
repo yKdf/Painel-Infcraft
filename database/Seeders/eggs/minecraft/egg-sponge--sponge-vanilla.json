@@ -8,7 +8,7 @@
     "name": "Sponge (SpongeVanilla)",
     "author": "support@pterodactyl.io",
     "description": "SpongeVanilla is the SpongeAPI implementation for Vanilla Minecraft.",
-    "thumbnail": "https://painel.infcraft.net/utils/banners/spong.svg",
+    "thumbnail": "https://cdn.infcraft.net/file/painel/utils/banners/spong.svg",
     "features": [
         "eula",
         "java_version",
