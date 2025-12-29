@@ -5,11 +5,7 @@
 .env*
 .vagrant/*
 .vscode/*
-storage/log/*
-storage/clockwork/*
-storage/framework/cache/*
-storage/framework/sessions/*
-storage/framework/views/*
+storage/framework/*
 bootstrap/cache/*
 /.idea
 /nbproject
