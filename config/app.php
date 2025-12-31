@@ -29,7 +29,7 @@ return [
 
     'wallpaper' => env('APP_WALLPAPER', 'https://cdn.infcraft.net/file/painel/wallpaper.webp'),
 
-    'statusurl' => env('APP_STATUSURL', 'https://status.infcraft.net/'),
+    'statusurl' => env('APP_STATUSURL', 'https://status.infcraft.net'),
 
 
     /*

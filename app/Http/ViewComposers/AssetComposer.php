@@ -24,7 +24,7 @@ class AssetComposer
             'name' => config('app.name') ?? 'Pterodactyl',
             'icone' => config('app.icone') ?? 'https://cdn.infcraft.net/file/icon/Infcraft.svg',
             'wallpaper' => config('app.wallpaper') ?? 'https://cdn.infcraft.net/file/painel/wallpaper.webp',
-            'statusurl' => config('app.statusurl') ?? 'https://status.infcraft.net/',
+            'statusurl' => config('app.statusurl') ?? 'https://status.infcraft.net',
             'locale' => config('app.locale') ?? 'en',
             'recaptcha' => [
                 'enabled' => config('recaptcha.enabled', false),
