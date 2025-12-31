@@ -83,8 +83,7 @@ composer install --no-dev --optimize-autoloader
 Limpe o cache de templates compilados:
 
 ```bash
-php artisan view:clear
-php artisan config:clear
+sudo php artisan optimize:clear
 ```
 ## Database Updates
 
