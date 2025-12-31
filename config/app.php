@@ -25,6 +25,13 @@ return [
 
     'name' => env('APP_NAME', 'Infcraft'),
 
+    'icone' => env('APP_ICONE', 'https://cdn.infcraft.net/file/icon/Infcraft.svg'),
+
+    'wallpaper' => env('APP_WALLPAPER', 'https://cdn.infcraft.net/file/painel/wallpaper.webp'),
+
+    'statusurl' => env('APP_STATUSURL', 'https://status.infcraft.net/'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

@@ -22,6 +22,8 @@ Execute o seguinte comando para instalar as dependências do painel:
 
 ```bash
 yarn install
+
+composer install --no-dev --optimize-autoloader
 ```
 
 ---

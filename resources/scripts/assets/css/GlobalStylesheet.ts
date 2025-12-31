@@ -2,6 +2,10 @@ import tw from 'twin.macro';
 import { createGlobalStyle } from 'styled-components/macro';
 
 export default createGlobalStyle`
+    :root {
+        --panel-wallpaper: url("https://cdn.infcraft.net/file/painel/wallpaper.webp");
+    }
+
 
     body {
         ${tw`font-sans text-neutral-200`};
@@ -16,7 +20,7 @@ export default createGlobalStyle`
         left: 0;
         width: 100%;
         height: 100%;
-        background-image: url('https://cdn.infcraft.net/file/painel/wallpaper.webp');
+        background-image: var(--panel-wallpaper);
         background-size: cover;
         background-position: center;
         background-attachment: fixed;

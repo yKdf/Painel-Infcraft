@@ -2,6 +2,9 @@ import { action, Action } from 'easy-peasy';
 
 export interface SiteSettings {
     name: string;
+    icone: string;
+    wallpaper: string;
+    statusurl: string;
     locale: string;
     recaptcha: {
         enabled: boolean;

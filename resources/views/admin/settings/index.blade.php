@@ -32,6 +32,29 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
+                                <label class="control-label">Icone URL/NOME</label>
+                                <div>
+                                    <input type="text" class="form-control" name="app:icone" value="{{ old('app:icone', config('app.icone')) }}" />
+                                    <p class="text-muted"><small></small></p>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Wallpaper URL</label>
+                                <div>
+                                    <input type="text" class="form-control" name="app:wallpaper" value="{{ old('app:wallpaper', config('app.wallpaper')) }}" />
+                                    <p class="text-muted"><small></small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Status URL</label>
+                                <div>
+                                    <input type="text" class="form-control" name="app:statusurl" value="{{ old('app:statusurl', config('app.statusurl')) }}" />
+                                    <p class="text-muted"><small></small></p>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label class="control-label">Require 2-Factor Authentication</label>
                                 <div>
                                     <div class="btn-group" data-toggle="buttons">

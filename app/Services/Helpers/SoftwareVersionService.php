@@ -33,6 +33,11 @@ class SoftwareVersionService
         return Arr::get(self::$result, 'panel') ?? 'error';
     }
 
+    public function getPanelPtero(): string
+    {
+        return Arr::get(self::$result, 'panel-ptero') ?? 'error';
+    }
+
     /**
      * Get the latest version of the daemon from the CDN servers.
      */

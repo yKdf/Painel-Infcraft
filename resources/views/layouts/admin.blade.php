@@ -38,7 +38,7 @@
         <div class="wrapper">
             <header class="main-header">
                 <a href="{{ route('index') }}" class="logo">
-                    <span>{{  config('app.name', 'Pterodactyl') }}</span>
+                    <span>{{  config('app.name', 'Infcraft') }}</span>
                 </a>
                 <nav class="navbar navbar-static-top">
                     <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">

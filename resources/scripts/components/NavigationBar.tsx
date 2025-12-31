@@ -43,8 +43,12 @@ const style = css`
 `;
 
 export default () => {
+    const icone = useStoreState((state: ApplicationStore) => state.settings.data!.icone);
+    const statusurl = useStoreState((state: ApplicationStore) => state.settings.data!.statusurl);
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    const isUrl = (value?: string) => typeof value === 'string' && /^(https?:\/\/|\/\/)/i.test(value.trim());
 
     const onTriggerLogout = () => {
         setIsLoggingOut(true);
@@ -61,14 +65,17 @@ export default () => {
             <div className={'mx-auto w-full flex items-center h-[3.5rem] max-w-[1200px]'}>
                 <div id={'logo'} className={'flex-1'}>
                     <Link to={'/'}>
-                        <img src='https://cdn.infcraft.net/file/icon/Infcraft.svg' css={tw`block w-48 ml-2`} />
-                        {/* {name} */}
+                        {isUrl(icone) ? (
+                            <img src={icone} css={tw`block w-48 ml-2`} />
+                        ) : (
+                            <span css={tw`text-xl font-bold ml-2`}>{icone || 'Infcraft'}</span>
+                        )}
                     </Link>
                 </div>
                 <RightNavigation className={'flex h-full items-center justify-center'}>
                     <SearchContainer />
                     <Tooltip placement={'bottom'} content={'Status'}>
-                        <a href={'https://status.infcraft.net/'} rel={'noreferrer'} target={'_blank'}>
+                        <a href={statusurl} rel={'noreferrer'} target={'_blank'}>
                             <FontAwesomeIcon icon={faSignal} />
                         </a>
                     </Tooltip>

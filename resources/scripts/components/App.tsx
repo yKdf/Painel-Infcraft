@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Route, Router, Switch } from 'react-router-dom';
-import { StoreProvider } from 'easy-peasy';
+import { StoreProvider, useStoreState } from 'easy-peasy';
 import { store } from '@/state';
 import { SiteSettings } from '@/state/settings';
 import { NotFound } from '@/components/elements/ScreenBlock';
@@ -33,6 +33,18 @@ interface ExtendedWindow extends Window {
 
 setupInterceptors(history);
 
+const ThemeInjector = () => {
+    const wallpaper = useStoreState((state) => state.settings.data?.wallpaper?.replace(/^['"]+|['"]+$/g, ''));
+
+    useEffect(() => {
+        if (wallpaper) {
+            document.documentElement.style.setProperty('--panel-wallpaper', `url("${wallpaper}")`);
+        }
+    }, [wallpaper]);
+
+    return null;
+};
+
 const App = () => {
     const { PterodactylUser, SiteConfiguration } = window as ExtendedWindow;
     if (PterodactylUser && !store.getState().user.data) {
@@ -56,6 +68,7 @@ const App = () => {
         <>
             <GlobalStylesheet />
             <StoreProvider store={store}>
+                <ThemeInjector />
                 <div className={`mx-auto w-auto mt-2`}>
                     <Router history={history}>
                         <Switch>
