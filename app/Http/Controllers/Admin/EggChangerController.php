@@ -142,12 +142,12 @@ class EggChangerController extends Controller
         foreach ($servers as $srv) {
             foreach ($eggs as $egg) {
                 $server = DB::table('servers')->select(['id', 'available_eggs'])->where('id', '=', $srv->id)->get();
-                $server_availables = unserialize($server[0]->available_eggs);
+                $server_availables = json_decode($server[0]->available_eggs, true) ?: [];
                 $available = DB::table('available_eggs')->where('id', '=', $egg)->get();
 
                 if (!in_array($available[0]->egg_id, $server_availables)) {
                     array_push($server_availables, $available[0]->egg_id);
-                    DB::table('servers')->where('id', '=', $server[0]->id)->update(['available_eggs' => serialize($server_availables)]);
+                    DB::table('servers')->where('id', '=', $server[0]->id)->update(['available_eggs' => json_encode($server_availables)]);
                 }
             }
         }
@@ -186,7 +186,7 @@ class EggChangerController extends Controller
         }
 
         DB::table('servers')->where('id', '=', $server_id)->update([
-            'available_eggs' => serialize($selectableEggs)
+            'available_eggs' => json_encode($selectableEggs)
         ]);
 
         $this->alert->success('You have successfully updated selectable eggs.')->flash();

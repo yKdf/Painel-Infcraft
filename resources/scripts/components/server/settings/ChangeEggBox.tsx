@@ -63,7 +63,7 @@ const ChangeEggBox = () => {
                         <Select
                             css={tw`w-full mb-4`}
                             onChange={(e) => setEggId(parseInt(e.currentTarget.value))}
-                            defaultValue={data.currentEggId}
+                            value={eggId}
                         >
                             {data.eggs.map((item, key) => (
                                 <option key={key} value={item.id}>
@@ -72,7 +72,12 @@ const ChangeEggBox = () => {
                             ))}
                         </Select>
                         <div css={tw`text-right`}>
-                            <ImportEggButton onChange={() => mutate()} />
+                            <ImportEggButton
+                                onChange={() => mutate()}
+                                onEggImported={(importedEggId) => {
+                                    setEggId(importedEggId);
+                                }}
+                            />
                             <ChangeEggButton
                                 disabled={data.currentEggId === eggId}
                                 eggId={eggId}

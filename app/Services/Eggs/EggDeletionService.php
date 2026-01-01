@@ -36,8 +36,33 @@ class EggDeletionService
             throw new HasChildrenException(trans('exceptions.nest.egg.has_children'));
         }
         
+        // Remove from available_eggs and default_eggs tables
         \Illuminate\Support\Facades\DB::table('available_eggs')->where('egg_id', '=', $egg)->delete();
         \Illuminate\Support\Facades\DB::table('default_eggs')->where('egg_id', '=', $egg)->delete();
+        
+        // Remove from all servers' available_eggs JSON arrays
+        $servers = \Illuminate\Support\Facades\DB::table('servers')
+            ->select(['id', 'available_eggs'])
+            ->get();
+        
+        foreach ($servers as $server) {
+            if (empty($server->available_eggs)) {
+                continue;
+            }
+            
+            $availableEggs = json_decode($server->available_eggs, true) ?: [];
+            
+            // Check if this egg is in the server's available eggs
+            if (in_array($egg, $availableEggs)) {
+                // Remove the egg from the array
+                $availableEggs = array_values(array_diff($availableEggs, [$egg]));
+                
+                // Update the server
+                \Illuminate\Support\Facades\DB::table('servers')
+                    ->where('id', '=', $server->id)
+                    ->update(['available_eggs' => json_encode($availableEggs)]);
+            }
+        }
       
         return $this->repository->delete($egg);
     }

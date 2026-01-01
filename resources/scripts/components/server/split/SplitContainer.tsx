@@ -16,7 +16,7 @@ export default () => {
 
     const { clearFlashes } = useFlash();
 
-    const { data, error, isValidating } = getSplittedServer(uuid);
+    const { data, error, isValidating, mutate } = getSplittedServer(uuid);
     useEffect(() => {
         clearFlashes('splitted');
     }, []);
@@ -45,6 +45,7 @@ export default () => {
                                 key={index}
                                 splittedserver={splittedserver}
                                 className={index > 0 ? 'mt-1' : undefined}
+                                onServerDeleted={() => mutate()}
                             />
                         ))
                     ) : (
@@ -63,7 +64,7 @@ export default () => {
                                 </p>
                             )}
                             {splittedLimit > 0 && splittedLimit !== data.servers.length - 1 && (
-                                <AddSplitButton css={tw`flex justify-end mt-6`} />
+                                <AddSplitButton css={tw`flex justify-end mt-6`} onServerAdded={() => mutate()} />
                             )}
                         </div>
                     </Can>

@@ -39,7 +39,7 @@ class EggChangerController extends ClientApiController
      */
     public function index(EggChangerRequest $request, Server $server)
     {
-        $availableEggIds = unserialize($server->available_eggs) ?: [];
+        $availableEggIds = json_decode($server->available_eggs, true) ?: [];
         
         // Use Eloquent to get eggs
         $selectableEggs = Egg::whereIn('id', $availableEggIds)
@@ -93,7 +93,7 @@ class EggChangerController extends ClientApiController
         }
 
         // Server Specific Check
-        $availableServerEggs = unserialize($server->available_eggs) ?: [];
+        $availableServerEggs = json_decode($server->available_eggs, true) ?: [];
         if (!in_array($eggId, $availableServerEggs)) {
             throw new DisplayException('This egg isn\'t available to this server.');
         }
@@ -209,10 +209,10 @@ class EggChangerController extends ClientApiController
             }
 
             // Add to server
-            $availableEggs = unserialize($server->available_eggs) ?: [];
+            $availableEggs = json_decode($server->available_eggs, true) ?: [];
             if (!in_array($egg->id, $availableEggs)) {
                 $availableEggs[] = $egg->id;
-                $server->available_eggs = serialize($availableEggs);
+                $server->available_eggs = json_encode($availableEggs);
                 $server->save();
             }
 
@@ -293,7 +293,7 @@ class EggChangerController extends ClientApiController
         // The original code did strict checks. We should probably keep them.
         
         // Double check availablity (safe even if just added)
-        $availableServerEggs = unserialize($server->available_eggs) ?: [];
+        $availableServerEggs = json_decode($server->available_eggs, true) ?: [];
         if (!in_array($newEgg->id, $availableServerEggs)) {
              throw new DisplayException('This egg isn\'t available to this server.');
         }
@@ -336,7 +336,7 @@ class EggChangerController extends ClientApiController
     private function cleanupPreviousImportedEggs(Server $server, int $importedNestId)
     {
         try {
-            $availableEggsIds = unserialize($server->available_eggs) ?: [];
+            $availableEggsIds = json_decode($server->available_eggs, true) ?: [];
             
             // Find Candidate Eggs to Delete
             $importedEggs = Egg::where('nest_id', $importedNestId)
@@ -351,38 +351,51 @@ class EggChangerController extends ClientApiController
             // IDs to remove from this server
             $idsToRemove = $importedEggs->pluck('id')->toArray();
             
-            // Update this server available_eggs
+            // Update this server available_eggs first
             $availableEggsIds = array_diff($availableEggsIds, $idsToRemove);
-            $server->available_eggs = serialize($availableEggsIds);
+            $server->available_eggs = json_encode($availableEggsIds);
             $server->save();
-            
-            foreach ($importedEggs as $egg) {
-                 // Check utilization by other servers
-                 // Raw query is faster/easier for this specifics check
-                 // Check if ANY other server (not this one) uses this egg as ACTIVE
-                 $activeCount = Server::where('egg_id', $egg->id)->where('id', '!=', $server->id)->count();
-                 
-                 // Check if ANY other server has this egg in AVAILABLE
-                 $availableCount = 0;
-                 // This requires iterating because of serialized column. 
-                 // We can use a LIKE query as a heuristic optimization or just iterate chunked.
-                 // Given the previous code iterated all servers, we will try to be smarter or just do the same.
-                 // Better: Use raw query for LIKE (serialization usually produces i:ID;)
-                 $pattern = '%i:' . $egg->id . ';%';
-                 $availableCount = Server::where('id', '!=', $server->id)
-                     ->where('available_eggs', 'LIKE', $pattern)
-                     ->count();
 
-                 if ($activeCount === 0 && $availableCount === 0) {
-                      // Delete
-                      DB::table('available_eggs')->where('egg_id', $egg->id)->delete();
-                      DB::table('default_eggs')->where('egg_id', $egg->id)->delete();
-                      $this->eggRepository->delete($egg->id);
-                 }
-                 // Else: it is used elsewhere, we just removed it from this server (already done above)
+            // Optimization: Load all other servers' usage data once instead of querying per egg
+            // utilizing a cursor to minimize memory usage for large number of servers.
+            $usedEggIds = [];
+
+            // 1. Get all active egg IDs from other servers
+            // We only care about checking if our candidates are used, but fetching all distinct might be cheaper
+            // than complex WHERE NOT IN logic if the table is huge.
+            // Let's iterate.
+            foreach (Server::where('id', '!=', $server->id)->select('egg_id', 'available_eggs')->cursor() as $otherServer) {
+                $usedEggIds[$otherServer->egg_id] = true;
+                
+                $available = json_decode($otherServer->available_eggs, true);
+                if (is_array($available)) {
+                    foreach ($available as $eid) {
+                        $usedEggIds[$eid] = true;
+                    }
+                }
+            }
+            
+            $eggsToDelete = [];
+            foreach ($idsToRemove as $id) {
+                if (!isset($usedEggIds[$id])) {
+                    $eggsToDelete[] = $id;
+                }
+            }
+
+            if (!empty($eggsToDelete)) {
+                DB::transaction(function () use ($eggsToDelete) {
+                    DB::table('available_eggs')->whereIn('egg_id', $eggsToDelete)->delete();
+                    DB::table('default_eggs')->whereIn('egg_id', $eggsToDelete)->delete();
+                    // Use model to delete to ensure any model events fire if needed, or just DB for speed
+                    // Repository delete is safer for Pterodactyl logic (e.g. image deletions?)
+                    foreach ($eggsToDelete as $toDeleteId) {
+                         $this->eggRepository->delete($toDeleteId);
+                    }
+                });
             }
 
             // Cleanup Empty Nest
+            // Check if any eggs remain in this nest
             $remaining = Egg::where('nest_id', $importedNestId)->count();
             if ($remaining === 0) {
                  Nest::where('id', $importedNestId)->delete();

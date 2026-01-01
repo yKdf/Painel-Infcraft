@@ -27,7 +27,12 @@ interface Values {
     addsubusers: boolean;
 }
 
-export default () => {
+interface Props {
+    onServerAdded?: () => void;
+    className?: string;
+}
+
+export default ({ onServerAdded }: Props) => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const [visible, setVisible] = useState(false);
     //const egg = ServerContext.useStoreState((state) => state.server.data!.eggName);
@@ -84,6 +89,9 @@ export default () => {
                 });
                 setSubmitting(false);
                 setVisible(false);
+                if (onServerAdded) {
+                    onServerAdded();
+                }
             })
             .catch((error) => {
                 addFlash({ type: 'error', title: 'Erro', message: httpErrorToHuman(error), key: 'splitted' });

@@ -16,7 +16,7 @@ class EggChangerController extends ApplicationApiController
     public function index(Request $request, $server)
     {
         $eggs = [];
-        $available_eggs = unserialize($server->available_eggs);
+        $available_eggs = json_decode($server->available_eggs, true) ?: [];
 
         foreach ($available_eggs as $available_egg) {
             $egg = DB::table('eggs')->select(['id', 'nest_id', 'author', 'name', 'description', 'thumbnail'])->where('id', '=', $available_egg)->get();
@@ -37,7 +37,7 @@ class EggChangerController extends ApplicationApiController
     public function add(Request $request, $server)
     {
         $new_ids = $request->input('new_ids', []);
-        $available_eggs = unserialize($server->available_eggs);
+        $available_eggs = json_decode($server->available_eggs, true) ?: [];
 
         if (empty($new_ids)) {
             return response()->json(['error' => 'New ids parameter is empty.'], 500);
@@ -65,7 +65,7 @@ class EggChangerController extends ApplicationApiController
         }
 
         DB::table('servers')->where('id', '=', $server->id)->update([
-            'available_eggs' => serialize($available_eggs)
+            'available_eggs' => json_encode($available_eggs)
         ]);
 
         return response()->json(['success' => true]);
@@ -79,7 +79,7 @@ class EggChangerController extends ApplicationApiController
     public function remove(Request $request, $server)
     {
         $remove_ids = $request->input('remove_ids', []);
-        $available_eggs = unserialize($server->available_eggs);
+        $available_eggs = json_decode($server->available_eggs, true) ?: [];
 
         if (empty($remove_ids)) {
             return response()->json(['error' => 'Remove ids parameter is empty.'], 500);
@@ -102,7 +102,7 @@ class EggChangerController extends ApplicationApiController
         }
 
         DB::table('servers')->where('id', '=', $server->id)->update([
-            'available_eggs' => serialize($available_eggs)
+            'available_eggs' => json_encode($available_eggs)
         ]);
 
         return response()->json(['success' => true]);

@@ -108,7 +108,7 @@ class ServerCreationService
         foreach ($available_eggs as $available_egg) {
         	array_push($default_eggs, $available_egg->egg_id);
         }
-        \Illuminate\Support\Facades\DB::table('servers')->where('id', '=', $server->id)->update(['available_eggs' => serialize($default_eggs)]);
+        \Illuminate\Support\Facades\DB::table('servers')->where('id', '=', $server->id)->update(['available_eggs' => json_encode($default_eggs)]);
 
 
         return $server;

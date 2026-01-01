@@ -49,6 +49,9 @@ class AppServiceProvider extends ServiceProvider
             'task' => Models\Task::class,
             'user' => Models\User::class,
         ]);
+
+        // Register observers
+        Models\Egg::observe(\Pterodactyl\Observers\EggObserver::class);
     }
 
     /**

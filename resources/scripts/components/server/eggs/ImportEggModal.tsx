@@ -15,6 +15,7 @@ import InputError from '@/components/elements/InputError';
 
 type Props = {
     onChange: () => void;
+    onEggImported?: (eggId: number) => void;
 } & RequiredModalProps;
 
 interface Values {
@@ -213,7 +214,7 @@ export default ({ onChange, visible, ...props }: Props) => {
         };
 
         importEgg(uuid, importData)
-            .then(() => {
+            .then((response) => {
                 setModalVisible(false);
                 setSubmitting(false);
                 addFlash({
@@ -222,6 +223,12 @@ export default ({ onChange, visible, ...props }: Props) => {
                     type: 'success',
                     title: 'Sucesso',
                 });
+
+                // Call onEggImported with the imported egg ID if available
+                if (props.onEggImported && response?.data?.egg?.id) {
+                    props.onEggImported(response.data.egg.id);
+                }
+
                 onChange();
             })
             .catch((error) => {

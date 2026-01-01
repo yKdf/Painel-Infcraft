@@ -7,9 +7,10 @@ import { ApplicationStore } from '@/state';
 
 interface Props {
     onChange: () => void;
+    onEggImported?: (eggId: number) => void;
 }
 
-export default ({ onChange }: Props) => {
+export default ({ onChange, onEggImported }: Props) => {
     const [visible, setVisible] = useState(false);
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
 
@@ -21,7 +22,13 @@ export default ({ onChange }: Props) => {
     return (
         <>
             {visible && (
-                <ImportEggModal onChange={() => onChange()} appear visible onDismissed={() => setVisible(false)} />
+                <ImportEggModal
+                    onChange={() => onChange()}
+                    onEggImported={onEggImported}
+                    appear
+                    visible
+                    onDismissed={() => setVisible(false)}
+                />
             )}
             <Button color={'grey'} css={tw`mt-3 mr-2`} onClick={() => setVisible(true)}>
                 Importar Egg JSON

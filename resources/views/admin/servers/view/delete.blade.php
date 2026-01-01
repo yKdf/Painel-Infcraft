@@ -29,6 +29,19 @@
             <div class="box-footer">
                 <form id="deleteform" action="{{ route('admin.servers.view.delete', $server->id) }}" method="POST">
                     {!! csrf_field() !!}
+                    @if(!empty($server->split_masteruuid) || $server->split_limit > 0)
+                        <div class="form-group">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" id="delete_all_split" name="delete_all_split" value="1">
+                                <label for="delete_all_split">
+                                    Delete all associated split servers? (Master & Children)
+                                </label>
+                            </div>
+                            <p class="help-block small text-muted">
+                                If checked, this will delete the entire split group. If unchecked, only this specific server will be deleted (and resources returned to master if applicable).
+                            </p>
+                        </div>
+                    @endif
                     <button id="deletebtn" class="btn btn-danger">Safely Delete This Server</button>
                 </form>
             </div>

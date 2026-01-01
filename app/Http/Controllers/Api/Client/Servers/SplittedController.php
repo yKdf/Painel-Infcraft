@@ -118,7 +118,7 @@ class SplittedController extends ClientApiController
         } else {
             $cpuVari = $server->cpu;
         }
-        if($cpuVari - 1 < $request->cpu) {
+        if ($cpuVari - 1 < $request->cpu) {
             throw new DisplayException('Você precisa de mais CPU.');
         }
         if($server->memory - 512 < $request->ram) {
@@ -130,18 +130,40 @@ class SplittedController extends ClientApiController
         if($server->disk - 512 < $request->swap) {
             throw new DisplayException('Você precisa de mais SWAP.');
         }
-        $allocationId = DB::table('allocations')->where('node_id', '=', $server->node_id)->whereNull('server_id')->inRandomOrder()->first()->id;
+
+        // Use transaction to safely select an allocation
+        $allocationId = DB::transaction(function () use ($server) {
+            $allocation = DB::table('allocations')
+                ->where('node_id', '=', $server->node_id)
+                ->whereNull('server_id')
+                ->lockForUpdate()
+                ->inRandomOrder()
+                ->first();
+
+            if (!$allocation) {
+                throw new DisplayException('Não há alocações disponíveis neste node.');
+            }
+
+            return $allocation->id;
+        });
+
         $environement = [];
-        $env = DB::table('egg_variables')->where('egg_id', '=', 4)->get();
-        $eggs = DB::table('eggs')->where('id', '=', 4)->first();
+        // Use the parent server's egg instead of hardcoded ID 4
+        $eggId = $server->egg_id;
+        $env = DB::table('egg_variables')->where('egg_id', '=', $eggId)->get();
+        $egg = DB::table('eggs')->where('id', '=', $eggId)->first();
 
-        $images = json_decode($eggs->docker_images, true);
-        $selectedImage = reset($images);
+        if (!$egg) {
+            throw new DisplayException('Egg do servidor pai não encontrado.');
+        }
 
+        $images = json_decode($egg->docker_images, true);
+        $selectedImage = is_array($images) ? reset($images) : $egg->docker_images;
 
         foreach ($env as $item) {
             $environement[$item->env_variable] = $item->default_value;
         }
+
         try {
             $splittedserver = $this->serverCreationService->handle([
                 'name' => $request->name,
@@ -160,9 +182,9 @@ class SplittedController extends ClientApiController
                 'cpu' => (int) $request->cpu,
                 'threads' => '',
                 'nest_id' => $server->nest_id,
-                'egg_id' => 4,
+                'egg_id' => $eggId,
                 'pack_id' => 0,
-                'startup' => $eggs->startup,
+                'startup' => $egg->startup,
                 'image' => $selectedImage,
                 'environment' => $environement,
                 'start_on_completion' => false,

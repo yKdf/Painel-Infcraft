@@ -20,9 +20,10 @@ import { NavLink } from 'react-router-dom';
 interface Props {
     splittedserver: any;
     className?: string;
+    onServerDeleted?: () => void;
 }
 
-export default ({ splittedserver, className }: Props) => {
+export default ({ splittedserver, className, onServerDeleted }: Props) => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { clearFlashes, addFlash } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
     const [visible, setVisible] = useState(false);
@@ -38,6 +39,9 @@ export default ({ splittedserver, className }: Props) => {
                 addFlash({ type: 'success', title: 'Sucess', message: 'Server removed successfully', key: 'splitted' });
                 setSubmitting(false);
                 setVisible(false);
+                if (onServerDeleted) {
+                    onServerDeleted();
+                }
             })
             .catch((error) => {
                 addFlash({ type: 'error', title: 'Error', message: httpErrorToHuman(error), key: 'splitted' });
@@ -102,14 +106,14 @@ export default ({ splittedserver, className }: Props) => {
                     )}
                 </div>
                 <div css={tw`ml-8 text-center hidden md:block`}>
+                    <p css={tw`text-sm`}>{splittedserver.cpu === 0 ? 'Ilimitado' : splittedserver.cpu}</p>
+                    <p css={tw`mt-1 text-2xs text-neutral-500 uppercase select-none`}>CPU</p>
+                </div>
+                <div css={tw`ml-8 text-center hidden md:block`}>
                     <NavLink to={`../${splittedserver.uuidShort}`}>
                         <p css={tw`text-sm`}>{splittedserver.memory}</p>
                     </NavLink>
                     <p css={tw`mt-1 text-2xs text-neutral-500 uppercase select-none`}>Memory</p>
-                </div>
-                <div css={tw`ml-8 text-center hidden md:block`}>
-                    <p css={tw`text-sm`}>{splittedserver.cpu === 0 ? 'Ilimitado' : splittedserver.cpu}</p>
-                    <p css={tw`mt-1 text-2xs text-neutral-500 uppercase select-none`}>CPU</p>
                 </div>
                 <div css={tw`ml-8 text-center hidden md:block`}>
                     <NavLink to={`../${splittedserver.uuidShort}`}>
