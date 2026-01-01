@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCogs, faLayerGroup, faSignOutAlt, faExchangeAlt, faSignal } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faLayerGroup, faSignOutAlt, faSignal } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
@@ -91,9 +91,6 @@ export default () => {
                                     <FontAwesomeIcon icon={faCogs} />
                                 </a>
                             </Tooltip>
-                            <NavLink to={'/eggs'}>
-                                <FontAwesomeIcon icon={faExchangeAlt} />
-                            </NavLink>
                         </>
                     )}
                     <Tooltip placement={'bottom'} content={'Configuração de conta'}>

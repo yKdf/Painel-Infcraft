@@ -62,6 +62,7 @@ class Permission extends Model
 
     public const ACTION_SETTINGS_RENAME = 'settings.rename';
     public const ACTION_SETTINGS_REINSTALL = 'settings.reinstall';
+    public const ACTION_SETTINGS_CHANGE_EGG = 'settings.ChangeEgg';
 
     public const ACTION_ACTIVITY_READ = 'activity.read';
 
@@ -105,12 +106,7 @@ class Permission extends Model
                 'connect' => 'Allows a user to connect to the websocket instance for a server to stream the console.',
             ],
         ],
-        'eggchanger' => [
-	        'description' => 'Manage egg changer.',
-	        'keys' => [
-	        	'manage' => 'Change server egg.',
-            ],
-        ],
+
 
 
         'control' => [
@@ -212,6 +208,7 @@ class Permission extends Model
             'keys' => [
                 'rename' => 'Allows a user to rename this server and change the description of it.',
                 'reinstall' => 'Allows a user to trigger a reinstall of this server.',
+                'ChangeEgg' => 'Allows a user to change the egg for this server.',
             ],
         ],
 

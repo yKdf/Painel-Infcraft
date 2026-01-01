@@ -6,6 +6,7 @@ import RenameServerBox from '@/components/server/settings/RenameServerBox';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import Can from '@/components/elements/Can';
 import ReinstallServerBox from '@/components/server/settings/ReinstallServerBox';
+import ChangeEggBox from '@/components/server/settings/ChangeEggBox';
 import tw from 'twin.macro';
 import Input from '@/components/elements/Input';
 import Label from '@/components/elements/Label';
@@ -69,6 +70,9 @@ export default () => {
                             </div>
                         </CopyOnClick>
                     </TitledGreyBox>
+                    <Can action={'settings.ChangeEgg'}>
+                        <ChangeEggBox />
+                    </Can>
                 </div>
                 <div css={tw`w-full mt-6 md:flex-1 md:mt-0`}>
                     <Can action={'settings.rename'}>

@@ -4,6 +4,8 @@ namespace Pterodactyl\Http\Requests\Api\Client\Servers;
 
 use Pterodactyl\Http\Requests\Api\Client\ClientApiRequest;
 
+use Pterodactyl\Models\Permission;
+
 class EggChangerRequest extends ClientApiRequest
 {
     /**
@@ -11,6 +13,6 @@ class EggChangerRequest extends ClientApiRequest
      */
     public function permission(): string
     {
-        return 'eggchanger.manage';
+        return Permission::ACTION_SETTINGS_CHANGE_EGG;
     }
 }

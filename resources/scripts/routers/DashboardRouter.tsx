@@ -8,7 +8,6 @@ import SubNavigation from '@/components/elements/SubNavigation';
 import { useLocation } from 'react-router';
 import Spinner from '@/components/elements/Spinner';
 import routes from '@/routers/routes';
-import EggsRouter from './EggsRouter';
 
 export default () => {
     const location = useLocation();
@@ -44,7 +43,7 @@ export default () => {
                                 <Component />
                             </Route>
                         ))}
-                        <Route path='/eggs' component={EggsRouter} />
+
                         <Route path={'*'}>
                             <NotFound />
                         </Route>

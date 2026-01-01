@@ -1,5 +1,9 @@
 import http from '@/api/http';
-import { EggsResponse } from '@/components/server/eggs/EggsContainer';
+
+export interface EggsResponse {
+    eggs: any[];
+    currentEggId: number;
+}
 
 export default async (uuid: string): Promise<EggsResponse> => {
     const { data } = await http.get(`/api/client/servers/${uuid}/eggs`);

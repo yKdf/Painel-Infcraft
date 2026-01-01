@@ -14,7 +14,7 @@ import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer'
 import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
 import PluginManagerContainer from '@/components/server/plugin/PluginManagerContainer';
-import EggsContainer from '@/components/server/eggs/EggsContainer';
+
 import SplitContainer from '@/components/server/split/SplitContainer';
 import FileEditContainer from '@/components/server/files/FileEditContainer';
 import ScheduleEditContainer from '@/components/server/schedules/ScheduleEditContainer';
@@ -148,12 +148,7 @@ export default {
             name: 'Settings',
             component: SettingsContainer,
         },
-        {
-            path: '/eggs',
-            permission: ['eggchanger.*'],
-            name: 'Egg Changer',
-            component: EggsContainer,
-        },
+
         {
             path: '/activity',
             permission: 'activity.*',

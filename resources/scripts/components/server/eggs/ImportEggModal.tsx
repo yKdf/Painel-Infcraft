@@ -61,6 +61,8 @@ const DescriptionText = styled.p`
 const ImportEggModal = ({ ...props }: Omit<Props, 'onImportEggUpdated'>) => {
     const { isSubmitting, errors, touched, setFieldValue, values } = useFormikContext<Values>();
 
+    const { clearFlashes, clearAndAddHttpError } = useFlash();
+
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file && file.type === 'application/json') {
@@ -68,10 +70,14 @@ const ImportEggModal = ({ ...props }: Omit<Props, 'onImportEggUpdated'>) => {
             reader.onload = (e) => {
                 const content = e.target?.result as string;
                 setFieldValue('eggJson', content);
+                clearFlashes('server:eggs:import');
             };
             reader.readAsText(file);
         } else if (file) {
-            alert('Por favor, selecione apenas arquivos JSON (.json)');
+            clearAndAddHttpError({
+                key: 'server:eggs:import',
+                error: 'Por favor, selecione apenas arquivos JSON (.json)',
+            });
             event.target.value = '';
         }
     };
