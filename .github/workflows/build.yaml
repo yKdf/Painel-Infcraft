@@ -3,11 +3,9 @@ name: Build
 on:
   push:
     branches:
-      - "develop"
       - "1.0-develop"
   pull_request:
     branches:
-      - "develop"
       - "1.0-develop"
 
 jobs:
@@ -32,6 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn build:production
+      - run: yarn tsc
+      - run: yarn lint
+      - run: yarn build:production
