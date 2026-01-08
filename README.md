@@ -129,13 +129,7 @@ php artisan up
 
 ## Star History
 
-<a href="https://star-history.com/#yKdf/Painel-Infcraft&Timeline">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=yKdf/Painel-Infcraft&type=Timeline&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=yKdf/Painel-Infcraft&type=Timeline" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=yKdf/Painel-Infcraft&type=Timeline" />
-  </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=yKdf/Painel-Infcraft&type=date&legend=top-left)](https://www.star-history.com/#yKdf/Painel-Infcraft&type=date&legend=top-left)
 
 ## License
 
