@@ -28,8 +28,10 @@ jobs:
         run: yarn build:production
 
       - name: Create release branch and bump version
+        env:
+          REF: ${{ github.ref }}
         run: |
-          BRANCH="release/${{ github.ref_name }}"
+          BRANCH="release/${REF:10}"
           git config --local user.email 'gabe.debortoli@gmail.com'
           git config --local user.name 'yKdf'
           git checkout -b "$BRANCH"
@@ -41,7 +43,7 @@ jobs:
 
       - name: Create release archive
         run: |
-          rm -rf node_modules tests CONTRIBUTING.md flake.lock flake.nix phpunit.xml shell.nix
+          rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpunit.xml shell.nix
           tar -czf panel.tar.gz * .editorconfig .env.example .eslintignore .eslintrc.js .gitignore .prettierrc.json
 
       #- name: Extract changelog
