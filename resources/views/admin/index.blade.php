@@ -28,13 +28,13 @@
             <div class="box-body">
                 Painel 1
                 @if ($version->isLatestPanel())
-                    You are running Pterodactyl Panel version <code>Infcraft {{ config('app.version') }}</code>. Your panel is up-to-date!
+                    You are running Pterodactyl Panel version <a href="https://github.com/yKdf/Painel-Infcraft/releases/v{{ config('app.version') }}" target="_blank"><code>Infcraft {{ config('app.version') }}</code></a>. Your panel is up-to-date!
                 @else
-                    Your panel is <strong>not up-to-date!</strong> The latest version is <a href="https://github.com/yKdf/Painel-Infcraft/releases/v{{ $version->getPanel() }}" target="_blank"><code>Infcraft {{ $version->getPanel() }}</code></a> and you are currently running version <code>Infcraft {{ config('app.version') }}</code>.
+                    Your panel is <strong>not up-to-date!</strong> The latest version is <a href="https://github.com/yKdf/Painel-Infcraft/releases/v{{ $version->getPanel() }}" target="_blank"><code>Infcraft {{ $version->getPanel() }}</code></a> and you are currently running version <a href="https://github.com/yKdf/Painel-Infcraft/releases/v{{ config('app.version') }}" target="_blank"><code>Infcraft {{ config('app.version') }}</code></a>.
                 @endif
             </div>
             <div class="box-body">
-                The official version of Pterodactyl is <a href="https://github.com/Pterodactyl/Panel/releases/v{{ $version->getPanel() }}" target="_blank"><code>Pterodactyl {{ $version->getPanelPtero() }}</code></a>.
+                The official version of Pterodactyl is <a href="https://github.com/Pterodactyl/Panel/releases/v{{ $version->getPanelPtero() }}" target="_blank"><code>Pterodactyl {{ $version->getPanelPtero() }}</code></a>.
             </div>
         </div>
     </div>
