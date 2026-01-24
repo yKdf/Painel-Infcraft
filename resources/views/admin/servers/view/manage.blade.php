@@ -64,7 +64,7 @@
 							<label for="selectableEggs">Selectable Eggs</label>
 							<select class="form-control" multiple id="selectableEggs" name="selectableEggs[]">
 								@foreach ($available_eggs as $available_egg)
-									<option value="{{ $available_egg->id }}" {{ in_array($available_egg->egg_id, unserialize($server->available_eggs)) ? 'selected' : '' }}>{{ $available_egg->egg->name }}</option>
+									<option value="{{ $available_egg->id }}" {{ in_array($available_egg->egg_id,json_decode($server->available_eggs, true) ?? []) ? 'selected' : '' }}>{{ $available_egg->egg->name }}</option>
 								@endforeach
 							</select>
 						</div>
