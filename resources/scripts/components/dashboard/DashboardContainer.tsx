@@ -25,7 +25,7 @@ export default () => {
     const uuid = useStoreState((state) => state.user.data!.uuid);
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
-    const [statusFilter, setStatusFilter] = useState<ServerPowerState>('all');
+    const [statusFilter, setStatusFilter] = usePersistedState<ServerPowerState>('status-filter', 'all');
     const [serverStates, setServerStates] = useState<Record<string, ServerPowerState | 'error'>>({});
 
     const { data: servers, error } = useSWR<PaginatedResult<Server>>(
