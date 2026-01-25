@@ -1,6 +1,6 @@
 import http from '@/api/http';
 
-export type ServerPowerState = 'offline' | 'starting' | 'running' | 'stopping';
+export type ServerPowerState = 'all' | 'offline' | 'starting' | 'running' | 'stopping' | 'suspended';
 
 export interface ServerStats {
     status: ServerPowerState;

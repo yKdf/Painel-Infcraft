@@ -13,6 +13,8 @@ import useSWR from 'swr';
 import { PaginatedResult } from '@/api/http';
 import Pagination from '@/components/elements/Pagination';
 import { useLocation } from 'react-router-dom';
+import Select from '../elements/Select';
+import getServerResourceUsage, { ServerPowerState } from '@/api/server/getServerResourceUsage';
 
 export default () => {
     const { search } = useLocation();
@@ -23,11 +25,35 @@ export default () => {
     const uuid = useStoreState((state) => state.user.data!.uuid);
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
+    const [statusFilter, setStatusFilter] = useState<ServerPowerState>('all');
+    const [serverStates, setServerStates] = useState<Record<string, ServerPowerState | 'error'>>({});
 
     const { data: servers, error } = useSWR<PaginatedResult<Server>>(
         ['/api/client/servers', showOnlyAdmin && rootAdmin, page],
         () => getServers({ page, type: showOnlyAdmin && rootAdmin ? 'admin' : undefined })
     );
+
+    useEffect(() => {
+        if (!servers?.items.length) return;
+
+        // Reset states when page changes or servers reload
+        setServerStates({});
+
+        servers.items.forEach((server) => {
+            // If the server status is not null (e.g. installing, suspended), we don't strictly need to fetch resources
+            // but for 'online'/'offline' check we usually do. However, suspended servers are handled by server.status.
+            // Only fetch for servers that look "ready" (status === null) to avoid errors or redundant calls
+            if (server.status === null) {
+                getServerResourceUsage(server.uuid)
+                    .then((stats) => {
+                        setServerStates((prev) => ({ ...prev, [server.uuid]: stats.status }));
+                    })
+                    .catch(() => {
+                        setServerStates((prev) => ({ ...prev, [server.uuid]: 'error' }));
+                    });
+            }
+        });
+    }, [servers?.items, page, showOnlyAdmin]);
 
     useEffect(() => {
         if (!servers) return;
@@ -48,24 +74,56 @@ export default () => {
         if (!error) clearFlashes('dashboard');
     }, [error]);
 
+    const filterItems = (servers?.items || []).filter((server) => {
+        if (statusFilter === 'all') return true;
+
+        if (statusFilter === 'suspended') return server.status === 'suspended';
+
+        const currentPowerState = serverStates[server.uuid];
+
+        if (statusFilter === 'running') {
+            return currentPowerState === 'running';
+        }
+
+        if (statusFilter === 'offline') {
+            return currentPowerState === 'offline';
+        }
+
+        return true;
+    });
+
     return (
         <PageContentBlock title={'Painel'} showFlashKey={'dashboard'}>
-            {rootAdmin && (
-                <div css={tw`mb-2 flex justify-end items-center`}>
-                    <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
-                        {showOnlyAdmin ? 'Mostrando servidores de outras pessoas' : 'Mostrando seus servidores'}
-                    </p>
-                    <Switch
-                        name={'show_all_servers'}
-                        defaultChecked={showOnlyAdmin}
-                        onChange={() => setShowOnlyAdmin((s) => !s)}
-                    />
+            <div css={tw`mb-2 flex justify-end space-x-4 items-center`}>
+                {rootAdmin && (
+                    <div css={tw`flex items-center`}>
+                        <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
+                            {showOnlyAdmin ? 'Mostrando servidores de outras pessoas' : 'Mostrando seus servidores'}
+                        </p>
+                        <Switch
+                            name={'show_all_servers'}
+                            defaultChecked={showOnlyAdmin}
+                            onChange={() => setShowOnlyAdmin((s) => !s)}
+                        />
+                    </div>
+                )}
+                <div css={tw`flex items-center`}>
+                    <Select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value as ServerPowerState)}
+                        css={tw`px-2 py-1 pr-8`}
+                    >
+                        <option value='all'>Todos</option>
+                        <option value='running'>Online</option>
+                        <option value='offline'>Offline</option>
+                        <option value='suspended'>Suspensos</option>
+                    </Select>
                 </div>
-            )}
+            </div>
             {!servers ? (
                 <Spinner centered size={'large'} />
             ) : (
-                <Pagination data={servers} onPageSelect={setPage}>
+                <Pagination data={{ ...servers, items: filterItems }} onPageSelect={setPage}>
                     {({ items }) =>
                         items.length > 0 ? (
                             items.map((server, index) => (
