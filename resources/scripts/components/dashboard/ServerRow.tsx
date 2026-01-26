@@ -1,15 +1,16 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEthernet, faHdd, faMemory, faMicrochip, faServer } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { Server } from '@/api/server/getServer';
-import getServerResourceUsage, { ServerPowerState, ServerStats } from '@/api/server/getServerResourceUsage';
+import getServerResourceUsage, { ServerPowerState } from '@/api/server/getServerResourceUsage';
 import { bytesToString, ip, mbToBytes } from '@/lib/formatters';
 import tw from 'twin.macro';
 import GreyRowBox from '@/components/elements/GreyRowBox';
 import Spinner from '@/components/elements/Spinner';
 import styled from 'styled-components/macro';
 import isEqual from 'react-fast-compare';
+import useSWR from 'swr';
 
 // Determines if the current value is in an alarm threshold so we can show it in red rather
 // than the more faded default style.
@@ -47,35 +48,17 @@ const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | unde
     }
 `;
 
-type Timer = ReturnType<typeof setInterval>;
-
 export default ({ server, className }: { server: Server; className?: string }) => {
-    const interval = useRef<Timer>(null) as React.MutableRefObject<Timer>;
-    const [isSuspended, setIsSuspended] = useState(server.status === 'suspended');
-    const [stats, setStats] = useState<ServerStats | null>(null);
+    const { data: stats, error } = useSWR(
+        ['server-resources', server.uuid],
+        () => getServerResourceUsage(server.uuid),
+        {
+            refreshInterval: 10000,
+            revalidateOnFocus: false,
+        }
+    );
 
-    const getStats = () =>
-        getServerResourceUsage(server.uuid)
-            .then((data) => setStats(data))
-            .catch((error) => console.error(error));
-
-    useEffect(() => {
-        setIsSuspended(stats?.isSuspended || server.status === 'suspended');
-    }, [stats?.isSuspended, server.status]);
-
-    useEffect(() => {
-        // Don't waste a HTTP request if there is nothing important to show to the user because
-        // the server is suspended.
-        if (isSuspended) return;
-
-        getStats().then(() => {
-            interval.current = setInterval(() => getStats(), 30000);
-        });
-
-        return () => {
-            interval.current && clearInterval(interval.current);
-        };
-    }, [isSuspended]);
+    const isSuspended = stats?.isSuspended || server.status === 'suspended';
 
     const alarms = { cpu: false, memory: false, disk: false };
     if (stats) {
@@ -120,7 +103,7 @@ export default ({ server, className }: { server: Server; className?: string }) =
                     isSuspended ? (
                         <div css={tw`flex-1 text-center`}>
                             <span css={tw`bg-yellow-500 rounded px-2 py-1 text-yellow-100 text-xs`}>
-                                {server.status === 'suspended' ? 'Suspenso' : 'Connection Error'}
+                                {server.status === 'suspended' ? 'Suspenso' : error ? 'Connection Error' : 'Offline'}
                             </span>
                         </div>
                     ) : server.isTransferring || server.status ? (

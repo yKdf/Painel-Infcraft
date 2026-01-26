@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "ES2019",
     "module": "es2020",
     "jsx": "react",
     "moduleResolution": "node",
     "lib": [
-      "es2015",
-      "dom"
+        "DOM",
+        "ES2019"
     ],
     "strict": true,
     "noEmit": true,
