@@ -15,6 +15,12 @@ Route::get('/account', [Base\IndexController::class, 'index'])
     ->withoutMiddleware(RequireTwoFactorAuthentication::class)
     ->name('account');
 
+Route::post('/account/google/unlink', [\Pterodactyl\Http\Controllers\Auth\SocialAuthController::class, 'unlink'])
+    ->name('account.google.unlink');
+
+Route::get('/account/google/link', [\Pterodactyl\Http\Controllers\Auth\SocialAuthController::class, 'redirect'])
+    ->name('account.google.link');
+
 Route::get('/locales/locale.json', Base\LocaleController::class)
     ->withoutMiddleware(['auth', RequireTwoFactorAuthentication::class])
     ->where('namespace', '.*');

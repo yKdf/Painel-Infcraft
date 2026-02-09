@@ -33,6 +33,10 @@ class SettingsServiceProvider extends ServiceProvider
         'pterodactyl:client_features:allocations:enabled',
         'pterodactyl:client_features:allocations:range_start',
         'pterodactyl:client_features:allocations:range_end',
+        'services:google:enabled',
+        'services:google:client_id',
+        'services:google:client_secret',
+        'services:google:redirect',
     ];
 
     /**
@@ -55,6 +59,7 @@ class SettingsServiceProvider extends ServiceProvider
      */
     protected static array $encrypted = [
         'mail:mailers:smtp:password',
+        'services:google:client_secret',
     ];
 
     /**
@@ -106,6 +111,11 @@ class SettingsServiceProvider extends ServiceProvider
             }
 
             $config->set(str_replace(':', '.', $key), $value);
+        }
+
+        // Set default Google Redirect URI if not present
+        if (empty($config->get('services.google.redirect'))) {
+            $config->set('services.google.redirect', url('/auth/google/callback'));
         }
     }
 

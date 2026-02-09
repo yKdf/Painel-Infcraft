@@ -3,6 +3,7 @@ import ContentBox from '@/components/elements/ContentBox';
 import UpdatePasswordForm from '@/components/dashboard/forms/UpdatePasswordForm';
 import UpdateEmailAddressForm from '@/components/dashboard/forms/UpdateEmailAddressForm';
 import ConfigureTwoFactorForm from '@/components/dashboard/forms/ConfigureTwoFactorForm';
+import GoogleAccountForm from '@/components/dashboard/forms/GoogleAccountForm';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import tw from 'twin.macro';
 import { breakpoint } from '@/theme';
@@ -48,9 +49,14 @@ export default () => {
                 >
                     <UpdateEmailAddressForm />
                 </ContentBox>
-                <ContentBox css={tw`md:ml-8 mt-8 md:mt-0`} title={'Verificação em duas etapas'}>
-                    <ConfigureTwoFactorForm />
-                </ContentBox>
+                <div>
+                    <ContentBox css={tw`md:ml-8 mt-8 md:mt-0`} title={'Verificação em duas etapas'}>
+                        <ConfigureTwoFactorForm />
+                    </ContentBox>
+                    <ContentBox css={tw`md:ml-8 mt-8 md:mt-4`} title={'Conta do Google'} showFlashes={'account:google'}>
+                        <GoogleAccountForm />
+                    </ContentBox>
+                </div>
             </Container>
         </PageContentBlock>
     );

@@ -125,6 +125,8 @@ class User extends Model implements
         'totp_authenticated_at',
         'gravatar',
         'root_admin',
+        'google_id',
+        'google_email',
     ];
 
     /**
