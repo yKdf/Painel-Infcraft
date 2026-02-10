@@ -30,9 +30,6 @@ class AssetComposer
                 'enabled' => config('recaptcha.enabled', false),
                 'siteKey' => config('recaptcha.website_key') ?? '',
             ],
-            'google' => [
-                'enabled' => config('services.google.enabled', false),
-            ],
         ]);
     }
 }

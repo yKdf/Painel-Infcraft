@@ -19,11 +19,6 @@ Route::get('/register', [Auth\RegisterController::class, 'index'])->name('auth.r
 Route::get('/password', [Auth\LoginController::class, 'index'])->name('auth.forgot-password');
 Route::get('/password/reset/{token}', [Auth\LoginController::class, 'index'])->name('auth.reset');
 
-Route::get('/google', [Auth\SocialAuthController::class, 'redirect'])->name('auth.google');
-Route::get('/google/callback', [Auth\SocialAuthController::class, 'callback'])->name('auth.google.callback');
-Route::get('/google/link', [Auth\SocialAuthController::class, 'showLinkRequestForm'])->name('auth.google.link');
-Route::post('/google/link', [Auth\SocialAuthController::class, 'link']);
-
 // Apply a throttle to authentication action endpoints, in addition to the
 // recaptcha endpoints to slow down manual attack spammers even more. 🤷‍
 //

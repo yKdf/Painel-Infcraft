@@ -9,7 +9,6 @@
                     <li @if($activeTab === 'basic')class="active"@endif><a href="{{ route('admin.settings') }}">General</a></li>
                     <li @if($activeTab === 'mail')class="active"@endif><a href="{{ route('admin.settings.mail') }}">Mail</a></li>
                     <li @if($activeTab === 'advanced')class="active"@endif><a href="{{ route('admin.settings.advanced') }}">Advanced</a></li>
-                    <li @if($activeTab === 'google')class="active"@endif><a href="{{ route('admin.settings.google') }}">Google SSO</a></li>
                 </ul>
             </div>
         </div>

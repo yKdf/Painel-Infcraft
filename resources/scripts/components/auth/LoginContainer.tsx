@@ -118,49 +118,6 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                         </Button>
                     </div>
 
-                    {useStoreState((state) => state.settings.data!.google.enabled) && (
-                        <div css={tw`mt-4 font-semibold`}>
-                            <button
-                                type={'button'}
-                                onClick={() => {
-                                    const width = 500;
-                                    const height = 600;
-                                    const left = (window.screen.width - width) / 2;
-                                    const top = (window.screen.height - height) / 2;
-                                    window.open(
-                                        '/auth/google',
-                                        'GoogleLogin',
-                                        `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no`
-                                    );
-                                }}
-                                css={tw`w-full flex items-center justify-center rounded-lg bg-white p-3 text-neutral-800 hover:bg-neutral-200 transition-colors duration-200 shadow-sm border border-neutral-300 cursor-pointer`}
-                            >
-                                <svg className='w-5 h-5 mr-3' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
-                                    <title>Google</title>
-                                    <g transform='matrix(1, 0, 0, 1, 0, 0)'>
-                                        <path
-                                            d='M23.52,12.216c0,-0.81 -0.063,-1.719 -0.234,-2.538l-11.286,0l0,4.608l6.633,0c-0.315,1.521 -1.134,2.772 -2.313,3.618l0,2.88l3.654,0c2.196,-2.025 3.51,-5.067 3.51,-8.568Z'
-                                            fill='#4285F4'
-                                        ></path>
-                                        <path
-                                            d='M12,24c3.159,0 5.922,-1.053 7.956,-2.916l-3.654,-2.88c-0.963,0.666 -2.25,1.08 -3.996,1.08c-3.15,0 -5.877,-2.142 -6.858,-5.067l-3.798,0l0,2.943c1.944,3.879 5.958,6.84 10.35,6.84Z'
-                                            fill='#34A853'
-                                        ></path>
-                                        <path
-                                            d='M5.142,16.216c-0.495,-1.431 -0.495,-3.006 0,-4.437l0,-2.943l-3.798,0c-2.043,4.014 -2.043,8.748 0,12.762l3.798,-2.943Z'
-                                            fill='#FBBC05'
-                                        ></path>
-                                        <path
-                                            d='M12,4.734c1.782,-0.027 3.501,0.657 4.779,1.881l3.528,-3.537c-2.322,-2.196 -5.463,-3.357 -8.667,-3.078c-4.392,0 -8.406,2.961 -10.35,6.84l3.798,2.943c0.981,-2.925 3.708,-5.067 6.858,-5.067Z'
-                                            fill='#EA4335'
-                                        ></path>
-                                    </g>
-                                </svg>
-                                <span css={tw`uppercase`}>Entrar com Google</span>
-                            </button>
-                        </div>
-                    )}
-
                     <div css={tw`p-4 mt-2 text-center`}>
                         <ButtonLink to={'/auth/password'}>Esqueceu sua senha?</ButtonLink>
                     </div>

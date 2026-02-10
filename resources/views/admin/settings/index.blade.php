@@ -91,7 +91,7 @@
                         {!! csrf_field() !!}
                         <button type="submit" name="_method" value="PATCH" class="btn btn-sm btn-primary pull-right">Save</button>
                     </div>
-                
+                </form>
             </div>
         </div>
     </div>

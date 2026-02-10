@@ -8,7 +8,6 @@ export interface UserData {
     language: string;
     rootAdmin: boolean;
     useTotp: boolean;
-    googleLinked: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

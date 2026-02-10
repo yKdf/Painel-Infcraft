@@ -19,10 +19,6 @@ class BaseSettingsFormRequest extends AdminFormRequest
             'app:statusurl' => 'nullable|string|max:191',
             'pterodactyl:auth:2fa_required' => 'required|integer|in:0,1,2',
             'app:locale' => ['required', 'string', Rule::in(array_keys($this->getAvailableLanguages()))],
-            'services:google:enabled' => 'nullable|in:true,false,1,0,on,off',
-            'services:google:client_id' => 'required_with:services:google:enabled|nullable|string',
-            'services:google:client_secret' => 'required_with:services:google:enabled|nullable|string',
-            'services:google:redirect' => 'nullable|string|url',
         ];
     }
 
@@ -34,10 +30,6 @@ class BaseSettingsFormRequest extends AdminFormRequest
             'app:wallpaper' => 'Wallpaper URL',
             'pterodactyl:auth:2fa_required' => 'Require 2-Factor Authentication',
             'app:locale' => 'Default Language',
-            'services:google:enabled' => 'Google SSO Enabled',
-            'services:google:client_id' => 'Google Client ID',
-            'services:google:client_secret' => 'Google Client Secret',
-            'services:google:redirect' => 'Google Redirect URI',
         ];
     }
 }
