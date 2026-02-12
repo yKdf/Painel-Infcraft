@@ -102,6 +102,43 @@
             </div>
         </div>
     </form>
+    <div class="col-md-6">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Google Account</h3>
+            </div>
+            <div class="box-body">
+                @if(!empty($user->google_id))
+                    <p class="no-margin">
+                        <strong>Status:</strong> <span class="text-green">Linked</span>
+                        <strong>| Google ID:</strong> <code>{{ $user->google_id }}</code>
+                        <strong>| Google Email:</strong> {{ $user->google_email ?: 'Not provided' }}
+                    </p>
+                @else
+                    <p class="no-margin">
+                        <strong>Status:</strong> <span class="text-muted">Not linked</span>
+                    </p>
+                @endif
+            </div>
+            @if(!empty($user->google_id))
+                <div class="box-footer">
+                    <form action="{{ route('admin.users.view', $user->id) }}" method="POST">
+                        {!! csrf_field() !!}
+                        {!! method_field('PATCH') !!}
+                        <input type="hidden" name="email" value="{{ $user->email }}">
+                        <input type="hidden" name="username" value="{{ $user->username }}">
+                        <input type="hidden" name="name_first" value="{{ $user->name_first }}">
+                        <input type="hidden" name="name_last" value="{{ $user->name_last }}">
+                        <input type="hidden" name="language" value="{{ $user->language }}">
+                        <input type="hidden" name="root_admin" value="{{ $user->root_admin ? 1 : 0 }}">
+                        <input type="hidden" name="google_id" value="">
+                        <input type="hidden" name="google_email" value="">
+                        <button type="submit" class="btn btn-warning btn-sm">Unlink Google Account</button>
+                    </form>
+                </div>
+            @endif
+        </div>
+    </div>
     <div class="col-xs-12">
         <div class="box box-danger">
             <div class="box-header with-border">

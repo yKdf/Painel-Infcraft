@@ -23,6 +23,8 @@ class UserFormRequest extends AdminFormRequest
             'password',
             'language',
             'root_admin',
+            'google_id',
+            'google_email',
         ])->toArray();
     }
 }
