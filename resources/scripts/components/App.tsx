@@ -25,6 +25,8 @@ interface ExtendedWindow extends Window {
         root_admin: boolean;
         use_totp: boolean;
         language: string;
+        google_linked?: boolean;
+        google_email?: string | null;
         updated_at: string;
         created_at: string;
         /* eslint-enable camelcase */
@@ -52,6 +54,8 @@ const App = () => {
             uuid: PterodactylUser.uuid,
             username: PterodactylUser.username,
             email: PterodactylUser.email,
+            googleEmail: PterodactylUser.google_email,
+            googleLinked: PterodactylUser.google_linked,
             language: PterodactylUser.language,
             rootAdmin: PterodactylUser.root_admin,
             useTotp: PterodactylUser.use_totp,

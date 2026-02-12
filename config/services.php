@@ -29,4 +29,14 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+
+    'google' => [
+        'enabled' => env('GOOGLE_SSO_ENABLED', false),
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+        'auto_link_by_email' => env('GOOGLE_SSO_AUTO_LINK_BY_EMAIL', true),
+        'auto_create_account' => env('GOOGLE_SSO_AUTO_CREATE_ACCOUNT', false),
+        'allowed_domains' => env('GOOGLE_SSO_ALLOWED_DOMAINS', ''),
+    ],
 ];

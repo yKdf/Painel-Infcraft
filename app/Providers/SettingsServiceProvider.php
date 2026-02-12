@@ -33,6 +33,12 @@ class SettingsServiceProvider extends ServiceProvider
         'pterodactyl:client_features:allocations:enabled',
         'pterodactyl:client_features:allocations:range_start',
         'pterodactyl:client_features:allocations:range_end',
+        'services:google:enabled',
+        'services:google:client_id',
+        'services:google:client_secret',
+        'services:google:auto_link_by_email',
+        'services:google:auto_create_account',
+        'services:google:allowed_domains',
     ];
 
     /**
@@ -55,6 +61,7 @@ class SettingsServiceProvider extends ServiceProvider
      */
     protected static array $encrypted = [
         'mail:mailers:smtp:password',
+        'services:google:client_secret',
     ];
 
     /**

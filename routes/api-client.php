@@ -30,6 +30,8 @@ Route::prefix('/account')->middleware(AccountSubject::class)->group(function () 
 
     Route::put('/email', [Client\AccountController::class, 'updateEmail'])->name('api:client.account.update-email');
     Route::put('/password', [Client\AccountController::class, 'updatePassword'])->name('api:client.account.update-password');
+    Route::post('/google/link-url', [Client\AccountController::class, 'googleLinkUrl']);
+    Route::delete('/google', [Client\AccountController::class, 'unlinkGoogle']);
 
     Route::get('/activity', Client\ActivityLogController::class)->name('api:client.account.activity');
 

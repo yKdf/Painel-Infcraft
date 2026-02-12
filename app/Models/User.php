@@ -25,6 +25,8 @@ use Pterodactyl\Notifications\SendPasswordReset as ResetPasswordNotification;
  *
  * @property int $id
  * @property string|null $external_id
+ * @property string|null $google_id
+ * @property string|null $google_email
  * @property string $uuid
  * @property string $username
  * @property string $email
@@ -61,6 +63,8 @@ use Pterodactyl\Notifications\SendPasswordReset as ResetPasswordNotification;
  * @method static Builder|User whereCreatedAt($value)
  * @method static Builder|User whereEmail($value)
  * @method static Builder|User whereExternalId($value)
+ * @method static Builder|User whereGoogleEmail($value)
+ * @method static Builder|User whereGoogleId($value)
  * @method static Builder|User whereGravatar($value)
  * @method static Builder|User whereId($value)
  * @method static Builder|User whereLanguage($value)
@@ -114,6 +118,8 @@ class User extends Model implements
      */
     protected $fillable = [
         'external_id',
+        'google_id',
+        'google_email',
         'username',
         'email',
         'name_first',
@@ -147,6 +153,8 @@ class User extends Model implements
      */
     protected $attributes = [
         'external_id' => null,
+        'google_id' => null,
+        'google_email' => null,
         'root_admin' => false,
         'language' => 'en',
         'use_totp' => false,
@@ -160,6 +168,8 @@ class User extends Model implements
         'uuid' => 'required|string|size:36|unique:users,uuid',
         'email' => 'required|email|between:1,191|unique:users,email',
         'external_id' => 'sometimes|nullable|string|max:191|unique:users,external_id',
+        'google_id' => 'sometimes|nullable|string|max:191|unique:users,google_id',
+        'google_email' => 'sometimes|nullable|email|between:1,191',
         'username' => 'nullable|between:1,191|unique:users,username',
         'name_first' => 'nullable|string|between:1,191',
         'name_last' => 'nullable|string|between:1,191',
@@ -189,7 +199,10 @@ class User extends Model implements
      */
     public function toVueObject(): array
     {
-        return Collection::make($this->toArray())->except(['id', 'external_id'])->toArray();
+        return Collection::make($this->toArray())
+            ->except(['id', 'external_id', 'google_id'])
+            ->merge(['google_linked' => !empty($this->google_id)])
+            ->toArray();
     }
 
     /**

@@ -27,6 +27,8 @@ class AccountTransformer extends BaseClientTransformer
             'first_name' => $model->name_first,
             'last_name' => $model->name_last,
             'language' => $model->language,
+            'google_linked' => !empty($model->google_id),
+            'google_email' => $model->google_email,
         ];
     }
 }

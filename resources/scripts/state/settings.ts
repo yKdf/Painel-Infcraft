@@ -10,6 +10,9 @@ export interface SiteSettings {
         enabled: boolean;
         siteKey: string;
     };
+    google: {
+        enabled: boolean;
+    };
 }
 
 export interface SettingsStore {

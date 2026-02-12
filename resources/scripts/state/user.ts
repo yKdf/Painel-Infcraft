@@ -5,6 +5,8 @@ export interface UserData {
     uuid: string;
     username: string;
     email: string;
+    googleEmail?: string | null;
+    googleLinked?: boolean;
     language: string;
     rootAdmin: boolean;
     useTotp: boolean;

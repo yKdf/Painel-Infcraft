@@ -3,6 +3,7 @@ import ContentBox from '@/components/elements/ContentBox';
 import UpdatePasswordForm from '@/components/dashboard/forms/UpdatePasswordForm';
 import UpdateEmailAddressForm from '@/components/dashboard/forms/UpdateEmailAddressForm';
 import ConfigureTwoFactorForm from '@/components/dashboard/forms/ConfigureTwoFactorForm';
+import GoogleAccountLinkForm from '@/components/dashboard/forms/GoogleAccountLinkForm';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import tw from 'twin.macro';
 import { breakpoint } from '@/theme';
@@ -27,7 +28,10 @@ const Container = styled.div`
 `;
 
 export default () => {
-    const { state } = useLocation<undefined | { twoFactorRedirect?: boolean }>();
+    const { state, search } = useLocation<undefined | { twoFactorRedirect?: boolean }>();
+    const params = new URLSearchParams(search);
+    const ssoLinked = params.get('sso_linked') === '1';
+    const hasSsoError = params.has('sso_error');
 
     return (
         <PageContentBlock title={'Visão geral da conta'}>
@@ -36,8 +40,23 @@ export default () => {
                     Sua conta deve ter a autenticação de dois fatores habilitada para continuar.
                 </MessageBox>
             )}
+            {ssoLinked && (
+                <MessageBox title={'Google vinculado'} type={'success'}>
+                    Sua conta Google foi vinculada com sucesso.
+                </MessageBox>
+            )}
+            {hasSsoError && (
+                <MessageBox title={'Erro no Google SSO'} type={'error'}>
+                    Não foi possível concluir a operação com Google SSO. Tente novamente.
+                </MessageBox>
+            )}
 
-            <Container css={[tw`lg:grid lg:grid-cols-3 mb-10`, state?.twoFactorRedirect ? tw`mt-4` : tw`mt-10`]}>
+            <Container
+                css={[
+                    tw`lg:grid lg:grid-cols-3 mb-10`,
+                    state?.twoFactorRedirect || ssoLinked || hasSsoError ? tw`mt-4` : tw`mt-10`,
+                ]}
+            >
                 <ContentBox title={'Atualizar senha'} showFlashes={'account:password'}>
                     <UpdatePasswordForm />
                 </ContentBox>
@@ -48,9 +67,14 @@ export default () => {
                 >
                     <UpdateEmailAddressForm />
                 </ContentBox>
-                <ContentBox css={tw`md:ml-8 mt-8 md:mt-0`} title={'Verificação em duas etapas'}>
-                    <ConfigureTwoFactorForm />
-                </ContentBox>
+                <div>
+                    <ContentBox css={tw`md:ml-8 mt-8 md:mt-0`} title={'Verificação em duas etapas'}>
+                        <ConfigureTwoFactorForm />
+                    </ContentBox>
+                    <ContentBox css={tw`md:ml-8 mt-8 md:mt-4`} title={'Google SSO'} showFlashes={'account:google'}>
+                        <GoogleAccountLinkForm />
+                    </ContentBox>
+                </div>
             </Container>
         </PageContentBlock>
     );
