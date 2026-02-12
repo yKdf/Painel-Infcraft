@@ -77,7 +77,7 @@ export default () => {
     };
 
     if (!googleEnabled) {
-        return <p css={tw`text-sm text-neutral-500`}>Google SSO está desativado pelo administrador.</p>;
+        return <p css={tw`text-sm`}>Google SSO está desativado pelo administrador.</p>;
     }
 
     return (
