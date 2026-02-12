@@ -23,6 +23,7 @@ const LoginContainer = ({ history, location }: RouteComponentProps) => {
     const { clearFlashes, clearAndAddHttpError, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
     const googleEnabled = useStoreState((state) => state.settings.data!.google.enabled);
+    const isCaptchaValid = !recaptchaEnabled || !!token;
 
     useEffect(() => {
         clearFlashes();
@@ -76,6 +77,15 @@ const LoginContainer = ({ history, location }: RouteComponentProps) => {
                 setSubmitting(false);
                 clearAndAddHttpError({ error });
             });
+    };
+
+    const onGoogleLoginClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (!isCaptchaValid) {
+            event.preventDefault();
+            clearFlashes();
+            addFlash({ type: 'error', title: 'Erro', message: 'Valide o CAPTCHA antes de continuar com Google.' });
+            setTurnstileKey((prev) => prev + 1);
+        }
     };
 
     const ButtonLink = styled(Link)`
@@ -138,8 +148,17 @@ const LoginContainer = ({ history, location }: RouteComponentProps) => {
                     {googleEnabled && (
                         <div css={tw`mt-4`}>
                             <a
-                                href={'/auth/google'}
-                                css={tw`flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-300 bg-white p-3 text-sm font-medium text-neutral-700 no-underline transition-colors duration-200 hover:bg-neutral-100`}
+                                href={
+                                    isCaptchaValid
+                                        ? `/auth/google${token ? `?recaptchaData=${encodeURIComponent(token)}` : ''}`
+                                        : '#'
+                                }
+                                onClick={onGoogleLoginClick}
+                                aria-disabled={!isCaptchaValid}
+                                css={[
+                                    tw`flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-300 bg-white p-3 text-sm font-medium text-neutral-700 no-underline transition-colors duration-200 hover:bg-neutral-100`,
+                                    !isCaptchaValid && tw`cursor-not-allowed opacity-60 hover:bg-white`,
+                                ]}
                             >
                                 <svg width='18' height='18' viewBox='0 0 48 48' aria-hidden='true'>
                                     <path
