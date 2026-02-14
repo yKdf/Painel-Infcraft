@@ -26,7 +26,6 @@
                 <h3 class="box-title">System Information</h3>
             </div>
             <div class="box-body">
-                Painel 1
                 @if ($version->isLatestPanel())
                     You are running Infcraft Panel version <a href="https://github.com/yKdf/Painel-Infcraft/releases/v{{ config('app.version') }}" target="_blank"><code>Infcraft {{ config('app.version') }}</code></a>. Your panel is up-to-date!
                 @else
