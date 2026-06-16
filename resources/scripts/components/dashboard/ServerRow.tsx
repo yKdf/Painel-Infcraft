@@ -99,12 +99,16 @@ export default ({ server, className }: { server: Server; className?: string }) =
                 </div>
             </div>
             <div css={tw`hidden col-span-7 lg:col-span-4 sm:flex items-baseline justify-center`}>
-                {!stats || isSuspended ? (
+                {!stats || isSuspended || server.isNodeUnderMaintenance ? (
                     isSuspended ? (
                         <div css={tw`flex-1 text-center`}>
                             <span css={tw`bg-yellow-500 rounded px-2 py-1 text-yellow-100 text-xs`}>
                                 {server.status === 'suspended' ? 'Suspenso' : error ? 'Connection Error' : 'Offline'}
                             </span>
+                        </div>
+                    ) : server.isNodeUnderMaintenance ? (
+                        <div css={tw`flex-1 text-center`}>
+                            <span css={tw`bg-yellow-500 rounded px-2 py-1 text-yellow-100 text-xs`}>Em manutenção</span>
                         </div>
                     ) : server.isTransferring || server.status ? (
                         <div css={tw`flex-1 text-center`}>
