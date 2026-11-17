@@ -18,6 +18,7 @@ module.exports = {
     entry: ['react-hot-loader/patch', './resources/scripts/index.tsx'],
     output: {
         path: path.join(__dirname, '/public/assets'),
+        hashFunction: 'sha256',
         filename: isProduction ? 'bundle.[chunkhash:8].js' : 'bundle.[hash:8].js',
         chunkFilename: isProduction ? '[name].[chunkhash:8].js' : '[name].[hash:8].js',
         publicPath: (process.env.WEBPACK_PUBLIC_PATH || '/assets/'),
@@ -44,7 +45,7 @@ module.exports = {
                         options: {
                             modules: {
                                 auto: true,
-                                localIdentName: isProduction ? '[name]_[hash:base64:8]' : '[path][name]__[local]',
+                                localIdentName: isProduction ? '[name]_[sha256:hash:base64:8]' : '[path][name]__[local]',
                                 localIdentContext: path.join(__dirname, 'resources/scripts/components'),
                             },
                             sourceMap: !isProduction,
@@ -61,7 +62,7 @@ module.exports = {
                 test: /\.(png|jp(e?)g|gif)$/,
                 loader: 'file-loader',
                 options: {
-                    name: 'images/[name].[hash:8].[ext]',
+                    name: 'images/[name].[sha256:hash:hex:8].[ext]',
                 },
             },
             {
