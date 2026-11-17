@@ -41,6 +41,7 @@ class ServerFactory extends Factory
             'startup' => '/bin/bash echo "hello world"',
             'image' => 'foo/bar:latest',
             'allocation_limit' => null,
+            'split_limit' => 0,
             'database_limit' => null,
             'backup_limit' => 0,
             'created_at' => Carbon::now(),

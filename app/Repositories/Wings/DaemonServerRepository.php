@@ -127,7 +127,10 @@ class DaemonServerRepository extends DaemonRepository
      * make it easier to revoke tokens on the fly. This ensures that the JTI key is formatted
      * correctly and avoids any costly mistakes in the codebase.
      *
-     * @throws \Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException
+     * @deprecated
+     * @see \Pterodactyl\Repositories\Wings\DaemonRevocationRepository::deauthorize()
+     *
+     * @throws DaemonConnectionException
      */
     public function revokeUserJTI(int $id): void
     {
