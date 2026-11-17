@@ -34,7 +34,7 @@ export default ({ splittedserver, className, onServerDeleted }: Props) => {
 
     const submit = (values: { confirm: string }, { setSubmitting }: FormikHelpers<{ confirm: string }>) => {
         clearFlashes();
-        removesplitted(uuid, splittedserver.split_masteruuid, splittedserver.uuid)
+        removesplitted(splittedserver.uuid)
             .then(() => {
                 addFlash({ type: 'success', title: 'Sucess', message: 'Server removed successfully', key: 'splitted' });
                 setSubmitting(false);

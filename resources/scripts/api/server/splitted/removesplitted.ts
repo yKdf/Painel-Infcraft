@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 import http from '@/api/http';
 
-export default (uuid: string, split_masteruuid: string, serveruuid: string) => {
+export default (serverUuid: string) => {
     return new Promise<void>((resolve, reject) => {
-        http.post(`/api/client/servers/${uuid}/splitted/splitremove`, { split_masteruuid, serveruuid })
+        http.post(`/api/client/servers/${serverUuid}/splitted/splitremove`)
             .then(() => resolve())
             .catch(reject);
     });

@@ -112,6 +112,11 @@ class SplittedController extends ClientApiController
     }
     public function split(Request $request, Server $server)
     {
+        $splittedserver = DB::transaction(function () use ($request, $server) {
+        // Route-model binding happens before the transaction. Reload and lock
+        // the source so concurrent splits cannot validate the same resources.
+        $server = Server::query()->whereKey($server->id)->lockForUpdate()->firstOrFail();
+
         $cpuTotal = $server->cpu;
         if ($cpuTotal == 0) {
             $cpuVari = 1000000;
@@ -127,7 +132,7 @@ class SplittedController extends ClientApiController
         if($server->disk - 512 < $request->disk) {
             throw new DisplayException('Você precisa de mais DISK.');
         }
-        if($server->disk - 512 < $request->swap) {
+        if($server->swap - 512 < $request->swap) {
             throw new DisplayException('Você precisa de mais SWAP.');
         }
 
@@ -218,6 +223,9 @@ class SplittedController extends ClientApiController
                 'split_masteruuid' => $server->uuid,
             ]);
         }
+        return $splittedserver;
+        });
+
         if($request->subuser) {
             $subusers = $this->fractal->collection($server->subusers)
             ->transformWith($this->getTransformer(SubuserTransformer::class))
@@ -232,36 +240,30 @@ class SplittedController extends ClientApiController
         }
 
     }
-    public function delete(Request $request)
+    public function delete(Server $server)
     {
-        $masterserver = DB::table('servers')->where('uuid', '=', $request->split_masteruuid)->first();
+        $this->authorize('split.delete', $server);
 
-        $servertoremove = DB::table('servers')->where('uuid', '=', $request->serveruuid)->first();
-        if($masterserver == []) {
+        // The route-bound server is the deletion target and has already been
+        // authorized by AuthenticateServerAccess. Never accept a target UUID
+        // from the request body.
+        if (empty($server->split_masteruuid) || $server->split_masteruuid === $server->uuid) {
             throw new DisplayException('This server does not exist/is not splitted');
         }
-        $cpuTotal = $masterserver->cpu;
-        if ($cpuTotal == 0) {
-            $cpuVari = 0;
-        } else {
-            $cpuVari = $servertoremove->cpu;
+
+        $masterserver = Server::query()
+            ->where('uuid', $server->split_masteruuid)
+            ->where('owner_id', $server->owner_id)
+            ->first();
+        if (!$masterserver || $server->split_masteruuid !== $masterserver->uuid) {
+            throw new DisplayException('This server does not exist/is not splitted');
         }
+
         try {
-
-            $this->serverDeletionService->handlesplitted(Server::find($servertoremove->id));
-            DB::table('servers')->where('uuid', '=', $request->split_masteruuid)->update([
-                'cpu' => $masterserver->cpu + $cpuVari,
-                'memory' => $masterserver->memory + $servertoremove->memory,
-                'disk' => $masterserver->disk + $servertoremove->disk,
-                'swap' => $masterserver->swap + $servertoremove->swap,
-            ]);
-
+            $this->serverDeletionService->handlesplitted($server);
         } catch (Throwable $e) {
             throw new DisplayException('Failed to delete the server. Please try again...');
         }
-
-
-
     }
 }
 
